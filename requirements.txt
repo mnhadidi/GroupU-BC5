@@ -34,3 +34,4 @@ packaging==21.3
 kiwisolver==1.4.2
 zipp==3.8.0
 yfinance==0.1.70
+dash_bootstrap_components==1.1.0
