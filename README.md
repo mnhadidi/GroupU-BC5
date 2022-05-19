@@ -1,1 +1,1 @@
-# GroupU BC5: Cryptocurrency Dashboard
+# Group U BC5: Cryptocurrency Dashboard
