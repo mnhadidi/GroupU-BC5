@@ -41,7 +41,10 @@ coin_dict = [
     {'label':"Chainlink (LINK)", 'value':"LINK"},
     {'label':"Terra (LUNA1)", 'value':"LUNA1"},
     {'label':"Polygon (MATIC)", 'value':"MATIC"},
-    {'label':"Solana (SOL)", 'value':"SOL"}
+    {'label':"Solana (SOL)", 'value':"SOL"},
+    {'label':"Binance Coin (BNB)", 'value':"BNB"},
+    {'label':"Polkadot (DOT)", 'value':"DOT"},
+    {'label':"Lido stETH (STETH)", 'value':"STETH"}
 ]
 
 coin = coin_dict[0]['value']
