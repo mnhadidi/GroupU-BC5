@@ -2,20 +2,20 @@ import dash
 from dash import dcc
 from dash import html
 import dash_bootstrap_components as dbc
-import datetime
-import math
-import matplotlib.pyplot as plt
+# import datetime
+# import math
+# import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from xgboost.sklearn import XGBRegressor
 from itertools import cycle
 import plotly.express as px
-import json
-import requests
-from bs4 import BeautifulSoup
-import requests
-import time
+# import json
+# import requests
+# from bs4 import BeautifulSoup
+# import requests
+# import time
 import yfinance as yf
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
