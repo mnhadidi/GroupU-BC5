@@ -4,7 +4,7 @@ from dash import html
 import dash_bootstrap_components as dbc
 # import datetime
 # import math
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
@@ -22,6 +22,7 @@ from dash.dependencies import Input, Output
 
 # setup dash app and heroku server info
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app.title = 'CryptoDash'
 server = app.server
 
 ####################
@@ -231,9 +232,10 @@ button_group = html.Div(
                 # “1d”, “5d”, “1mo”, “3mo”, “6mo”, “1y”, “2y”, “5y”, “10y”, “ytd”, “max”
             ],
             value='1y',
+
         ),
     ],
-    className="radio-group",
+    className="radio-group"
 )
 
 
@@ -276,14 +278,20 @@ app.layout = html.Div([
                         clearable=False,
                         style={"width": "50%"}
                     ),
-                ])
-                    , width=9),
+                ]) , width=6),
 
-                dbc.Col(html.H5(date, id='date', className='text-right'), width=3)
-            ]),
+                dbc.Col(
+                    html.Div([
+                        html.H5(date, id='date',  style={'text-align': 'right'}),
+                        button_group
+                    ])
+                , width=6
+                )]
+            ,align="stretch"
+            ,justify="center"),
         ]),
 
-        button_group,
+
 
         html.Div([
             dcc.Graph(
@@ -314,7 +322,8 @@ app.layout = html.Div([
 ####################
 @app.callback(
     [Output(component_id='Graph1', component_property='figure'),
-     Output(component_id='date', component_property='children')],
+     Output(component_id='date', component_property='children'),
+     Output(component_id='PredictGraph', component_property='figure')],
     [Input(component_id='my_dropdown', component_property='value'),
      Input(component_id="radios", component_property="value")]
 )
@@ -322,12 +331,12 @@ def update_dashboard(my_dropdown, radios):
     coin_df = yf.download(tickers=(my_dropdown + '-USD'), period=radios, interval='1d')
 
     # get date last updated
-
     date = "Data last updated: " + pd.to_datetime(str(coin_df.index.values[-1])).strftime("%b %d %Y, %H:%M")
 
     candlesthtick_fig = candlestick_fig_create(coin_df, my_dropdown)
+    prediction_plot = get_coin_pred_plots(coin, coin_df)
 
-    return candlesthtick_fig, date
+    return candlesthtick_fig, date,prediction_plot
 
 
 if __name__ == '__main__':
