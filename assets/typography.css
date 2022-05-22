@@ -1,0 +1,12 @@
+body {
+    font-family: 'Fira Sans', sans-serif;
+    src: url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap');
+}
+
+h1, h3, h4, h5, h6 {
+    color: #333333;
+}
+
+h2 {
+    color: #0096FF;
+}
