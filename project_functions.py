@@ -6,6 +6,10 @@ import plotly.graph_objs as go
 
 from project_variables import coin_dict, timeframe_tranf
 
+
+##########################
+# CANDLESTICK FIGURE
+##########################
 def candlestick_fig_create(coin_df):
     candlestick_fig = go.Figure(data=[go.Candlestick(x=coin_df.index.values,
                                                        open=coin_df["Open"],
@@ -13,7 +17,11 @@ def candlestick_fig_create(coin_df):
                                                        low=coin_df["Low"],
                                                        close=coin_df["Close"])])
 
-    candlestick_fig = candlestick_fig.update_layout(xaxis_rangeslider_visible=False,
+    # Edit the layout
+    candlestick_fig.update_layout(xaxis_title='Date',
+                                                  yaxis_title='Price USD')
+
+    candlestick_fig.update_layout(xaxis_rangeslider_visible=False,
                                                         margin=dict(l=20, r=16, t=20, b=20))
 
     return candlestick_fig
@@ -84,6 +92,21 @@ def create_pred_plot(coin_df_for_plot, prediction,future_set,timeframe):
     ))
 
     return prediction_fig
+
+##########################
+# TABLE WITH NEXT PREDICTED PRICES
+##########################
+
+def get_pred_pric_tab(future_set):
+    new_data = future_set
+    new_data['Close'] = new_data['Close'].map('{:,.2f}'.format)
+    new_data['Date'] = new_data['Date'].dt.strftime('%d/%m/%Y')
+
+    pred_pric_tab = go.Figure(data=[go.Table(header=dict(values=['Date', 'Pred price']),
+                                             cells=dict(values=[new_data['Date'][0:5], new_data['Close'][0:5]]))
+                                    ])
+
+    return pred_pric_tab
 
 ##########################
 # KPI DIV

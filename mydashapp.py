@@ -7,7 +7,7 @@ from yfinance import download
 from dash.dependencies import Input, Output
 
 # import internal project libraries
-from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot,create_kpi_div
+from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot,create_kpi_div,get_pred_pric_tab
 from project_variables import coin_dict
 
 # setup dash app and heroku server info
@@ -62,7 +62,7 @@ currency_dropdown = html.Div([
                             value=coin,
                             multi=False,
                             clearable=False,
-                            style={"width": "50%"}
+                            style={"min-width": "1rem"}
                         ),
                     ])
 # buttons for date period
@@ -100,6 +100,7 @@ candlestick_fig = candlestick_fig_create(coin_df)
 # linear regression plot
 coin_df_new, prediction, future_set, coin_df_for_plot = run_linear_regression(coin_df, coin_df)
 prediction_fig = create_pred_plot(coin_df_for_plot, prediction, future_set, '1y')
+pred_pric_tab = get_pred_pric_tab(future_set)
 
 ####################
 # create layout
@@ -112,14 +113,15 @@ app.layout = html.Div([
     dbc.Container([
         html.Div([
             dbc.Row([
-                dbc.Col(currency_dropdown, width=6),
+                dbc.Col(html.Img(src='/assets/BTC.png', id='symbol'), width=1),
+                dbc.Col(currency_dropdown, width=4),
 
                 dbc.Col(
                     html.Div([
                         html.H5(date, id='date', style={'text-align': 'right', 'padding-right': '16px'}),
                         button_group
                     ])
-                    , width=6
+                    , width=7
                 )]
                 , style={'padding-top': '20px', 'padding-bottom': '20px'})
         ]),
@@ -132,8 +134,25 @@ app.layout = html.Div([
         ] , style={'padding-top': '20px'}),
 
         html.Div([
-            html.H2('Plotting whole closing price with prediction'),
-            dcc.Graph( id='PredictGraph', figure=prediction_fig)
+            dbc.Row([
+                dbc.Col(
+                    html.Div([
+                        html.H2('Plotting whole closing price with prediction'),
+                        dcc.Graph( id='PredictGraph', figure=prediction_fig),
+                    ]), width=8
+                ),
+
+                dbc.Col(
+                    html.Div([
+                        html.H2('NEext 5 day prediction'),
+                        dcc.Graph( id='PredictTable', figure=pred_pric_tab),
+                    ]), width=4
+                )
+
+            ])
+
+
+
         ] , style={'padding-top': '40px'})
     ]),
 
@@ -177,6 +196,12 @@ def update_dashboard(coin_dropdown, data_radio):
 
     return candlestick_fig, date, prediction_fig, kpi_div
 
+@app.callback(Output(component_id='symbol', component_property='src')
+    ,Input(component_id='coin_dropdown', component_property='value'))
+
+def update_coin_image(coin_dropdown):
+    new_src = "/assets/" + coin_dropdown + '.png'
+    return new_src
 
 if __name__ == '__main__':
     app.run_server(debug=True)
