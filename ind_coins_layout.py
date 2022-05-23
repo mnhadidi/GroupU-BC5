@@ -77,19 +77,9 @@ pred_pric_tab = get_pred_pric_tab(future_set)
 
 # add some padding.
 CONTENT_STYLE = {
-    # "position": "fixed",
-    # "top": 0,
-    # "right": 0,
-    "padding-left":"16rem",
-    "margin-left":0,
-    "width":"100%"
-    # "bottom": 0,
-    # "width": "80%",
-    # "overflow-y":"scroll"
-    # "padding-left": "10rem",
-    # "paddin-right": '1rem',
-    # "padding-top": "2rem",
-    # "padding-bottom": "2rem"
+    "margin-left": "17rem",
+    "margin-right": "0",
+    "padding": "1rem 1rem",
 }
 
 # layout for main dash app
@@ -98,7 +88,7 @@ ind_coins_layout = html.Div([
     dbc.Container([
         html.Div([
             dbc.Row([
-                dbc.Col(html.Img(src='/assets/BTC.png', id='symbol'), width=1),
+                dbc.Col(html.Img(src='', id='symbol'), width=1),
                 dbc.Col(currency_dropdown, width=4),
 
                 dbc.Col(
@@ -115,7 +105,7 @@ ind_coins_layout = html.Div([
 
         html.Div([
             html.H2('Price Analysis'),
-            dcc.Graph(id='Graph1', figure=candlestick_fig)
+            dcc.Graph(id='Graph1') #, figure=candlestick_fig
         ] , style={'padding-top': '20px'}),
 
         html.Div([
@@ -139,7 +129,7 @@ ind_coins_layout = html.Div([
 
 
         ] , style={'padding-top': '40px'})
-    ], style={'width':'90%'}),
+    ]),
 
 
 ], style=CONTENT_STYLE

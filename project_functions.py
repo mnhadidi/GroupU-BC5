@@ -4,7 +4,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 import plotly.graph_objs as go
 
-from project_variables import coin_dict, timeframe_tranf
+from project_variables import coin_dict, timeframe_tranf,timeframe_full_name
 
 
 ##########################
@@ -121,14 +121,14 @@ def create_kpi_div(timeframe, coin_df):
     min_price_of_period = coin_df['Close'].min()
 
     # format numbers
-    current_price_str = "{:,.2f}".format(current_price)
-    day_change_str = "{:+,.2f}".format(day_change) + " " + "{:+,.2f}".format(day_change_perc) + "%"
-    max_price = "{:,.2f}".format(max_price_of_period)
-    min_price = "{:,.2f}".format(min_price_of_period)
+    current_price_str = "${:,.2f}".format(current_price)
+    day_change_str = "${:+,.2f}".format(day_change) + " " + "({:+,.2f}%)".format(day_change_perc)
+    max_price = "${:,.2f}".format(max_price_of_period)
+    min_price = "${:,.2f}".format(min_price_of_period)
 
     # change string names
-    high_string = timeframe + " high"
-    low_string = timeframe + " low"
+    high_string = timeframe_full_name[timeframe] + " high"
+    low_string = timeframe_full_name[timeframe] + " low"
 
     # get color to format day change
     if day_change >= 0:
