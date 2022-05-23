@@ -52,14 +52,6 @@ SIDEBAR_STYLE = {
     "background-color": "#f8f9fa",
 }
 
-# the styles for the main content position it to the right of the sidebar and
-# add some padding.
-CONTENT_STYLE = {
-    "margin-left": "18rem",
-    "margin-right": "2rem",
-    "padding": "2rem 1rem",
-}
-
 sidebar = html.Div(
     [
         dbc.Row([
@@ -84,7 +76,7 @@ sidebar = html.Div(
         html.H5('made with 🧡 and 🍕', style={'text-align': 'center', 'font-size': '12pt'}),
         html.H5('by Group U', style={'text-align': 'center', 'font-size': '12pt'}),
         html.H5('Beatriz Ferreira | Beatriz Peres | Diogo Marques | Miriam Hadidi Pereira'
-                , style={'text-align': 'center', 'font-size': '8pt', 'color': '#808080'},className='align-bottom')
+                , style={'text-align': 'center', 'font-size': '8pt', 'color': '#808080','bottom':0})
     ],
     style=SIDEBAR_STYLE,
 )

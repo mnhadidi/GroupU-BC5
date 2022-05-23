@@ -77,10 +77,19 @@ pred_pric_tab = get_pred_pric_tab(future_set)
 
 # add some padding.
 CONTENT_STYLE = {
-    "padding-left": "10rem",
-    "paddin-right": '1rem',
-    "padding-top": "2rem",
-    "padding-bottom": "2rem"
+    # "position": "fixed",
+    # "top": 0,
+    # "right": 0,
+    "padding-left":"16rem",
+    "margin-left":0,
+    "width":"100%"
+    # "bottom": 0,
+    # "width": "80%",
+    # "overflow-y":"scroll"
+    # "padding-left": "10rem",
+    # "paddin-right": '1rem',
+    # "padding-top": "2rem",
+    # "padding-bottom": "2rem"
 }
 
 # layout for main dash app
@@ -130,7 +139,8 @@ ind_coins_layout = html.Div([
 
 
         ] , style={'padding-top': '40px'})
-    ]),
+    ], style={'width':'90%'}),
 
 
-], style=CONTENT_STYLE)
+], style=CONTENT_STYLE
+)
