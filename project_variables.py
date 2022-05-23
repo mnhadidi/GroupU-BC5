@@ -22,3 +22,10 @@ timeframe_tranf = {
     , '3mo': 90, '6mo': 180, '1y': 365
     , '2y': 730, '5y': 1825, '10y': 3650
     , 'max': 9999999}
+
+timeframe_full_name = {
+    '1d': '1 day', '5d': '5 days', '1mo': '1 month'
+    , '3mo': '3 months', '6mo': '6 months', '1y': '1 year'
+    , '2y': '2 years', '5y': '5 years', '10y': '10 years'
+    , 'max': 'All time'
+}
