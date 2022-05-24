@@ -1,44 +1,9 @@
 import dash
 import dash_bootstrap_components as dbc
 from dash import Input, Output, dcc, html
+from project_variables import project_colors
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
-
-#### USE THIS INFORMATION TO MAKE THE SIDEBAR BETTER ########################################
-# nav bar
-navbar = dbc.Navbar(
-    dbc.Container(
-        [
-            html.A(
-                # Use row and col to control vertical alignment of logo / brand
-                dbc.Row(
-                    [
-                        dbc.Col(html.Img(src='/assets/logo.png', height="30px")),
-                        dbc.Col(dbc.NavbarBrand("CryptoDash", className="ms-2")),
-                    ],
-                    align="left",
-                    className="g-0",
-                ),
-                href="#",
-                style={"textDecoration": "none"},
-            ),
-            dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
-            dbc.NavItem(dbc.NavLink("Github", href="https://github.com/mnhadidi/GroupU-BC5"))
-        ]
-    ),
-
-)
-
-
-html.Footer([
-        html.Div([
-            html.H5('made with 🧡 and 🍕 by Group U', style={'text-align': 'center', 'font-size': '12pt'}),
-            html.H5('Beatriz Ferreira | Beatriz Peres | Diogo Marques | Miriam Hadidi Pereira'
-                    , style={'text-align': 'center', 'font-size': '8pt', 'color': '#808080'})
-        ], style={'padding': '20px', 'padding-top': '20px', 'backgroundColor': '#F5F5F5', 'margin-top': '10px'})
-    ])
-########################################################################################################################
-
 
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width
@@ -49,19 +14,20 @@ SIDEBAR_STYLE = {
     "bottom": 0,
     "width": "16rem",
     "padding": "2rem 1rem",
-    "background-color": "#f8f9fa",
+    "background-color": project_colors['dark-blue'],
+    "color":project_colors['white']
 }
 
-sidebar = html.Div(
-    [
-        dbc.Row([
-            dbc.Col(html.Img(src='/assets/logo.png',className='img-fluid w-100')),
-            dbc.Col(html.H2("CryptoDash"))
-        ]),
-        html.Hr(),
-        html.P(
-            "Crypto dashboard for coin predictions", className="lead"
-        ),
+SIDEBAR_BOTTOM = {
+    "position": "fixed",
+    "left": 0,
+    "bottom": 0,
+    "width": "16rem",
+    "padding": "2rem 1rem",
+}
+
+sidebar_top = html.Div([
+        html.H2("CryptoDash", style={"color":project_colors['white'],"padding-bottom":'2rem'}),
         dbc.Nav(
             [
                 dbc.NavLink("Crypto Insights", href="/", active="exact"),
@@ -72,11 +38,19 @@ sidebar = html.Div(
             vertical=True,
             pills=True,
         ),
-        html.Hr(),
-        html.H5('made with 🧡 and 🍕', style={'text-align': 'center', 'font-size': '12pt'}),
-        html.H5('by Group U', style={'text-align': 'center', 'font-size': '12pt'}),
-        html.H5('Beatriz Ferreira | Beatriz Peres | Diogo Marques | Miriam Hadidi Pereira'
-                , style={'text-align': 'center', 'font-size': '8pt', 'color': '#808080','bottom':0})
     ],
     style=SIDEBAR_STYLE,
 )
+
+sidebar_bottom = html.Div([
+    html.H5('made with 🧡 and 🍕', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080'}),
+    html.H5('by Group U', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080'}),
+    html.H5('Beatriz Ferreira | Beatriz Peres | Diogo Marques | Miriam Hadidi Pereira'
+            , style={'text-align': 'center', 'font-size': '8pt', 'color': '#808080'})
+
+],style=SIDEBAR_BOTTOM)
+
+sidebar = html.Div([
+    sidebar_top,
+    sidebar_bottom
+])

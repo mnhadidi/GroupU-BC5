@@ -9,7 +9,7 @@ from sidebar import sidebar
 
 # import internal project libraries
 from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot,create_kpi_div,get_pred_pric_tab
-from project_variables import coin_dict
+from project_variables import coin_dict, project_colors
 
 # initializing coin
 coin = coin_dict[0]['value']
@@ -28,7 +28,6 @@ date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strfti
 # currency dropdown
 
 currency_dropdown = html.Div([
-                        html.Label(['Currency']),
                         dcc.Dropdown(
                             id='coin_dropdown',
                             options=coin_dict,
@@ -37,7 +36,7 @@ currency_dropdown = html.Div([
                             clearable=False,
                             style={"min-width": "1rem"}
                         ),
-                    ])
+                    ], className='align-middle')
 # buttons for date period
 button_group = html.Div(
     [
@@ -93,34 +92,35 @@ ind_coins_layout = html.Div([
 
                 dbc.Col(
                     html.Div([
-                        html.H5(date, id='date', style={'text-align': 'right', 'padding-right': '16px'}),
+                        html.H5(date, id='date', style={'text-align': 'right', 'padding-right': '16px','color':'white'}),
                         button_group
                     ])
                     , width=7
                 )]
-                , style={'padding-top': '20px', 'padding-bottom': '20px'})
+                , style={'padding-top': '20px', 'padding-bottom': '20px'}, className='align-items-center')
         ]),
 
-        html.Div(id='kpiDiv', children=[kpi_div]),
+        html.Div(id='kpiDiv', children=[kpi_div], style={'padding-top': '40px'}),
 
         html.Div([
             html.H2('Price Analysis'),
-            dcc.Graph(id='Graph1') #, figure=candlestick_fig
-        ] , style={'padding-top': '20px'}),
+            dcc.Graph(id='Graph1', figure=candlestick_fig)
+        ], style={'padding-top': '40px'}),
 
         html.Div([
             dbc.Row([
                 dbc.Col(
                     html.Div([
-                        html.H2('Plotting whole closing price with prediction'),
+                        html.H2('Historical and Predicted Values'),
                         dcc.Graph( id='PredictGraph', figure=prediction_fig),
                     ]), width=8
                 ),
 
                 dbc.Col(
                     html.Div([
-                        html.H2('Next 5 day prediction'),
-                        dcc.Graph( id='PredictTable', figure=pred_pric_tab),
+                        html.H2('Next 10 Days Prediction'),
+                        html.Div(children=[pred_pric_tab],id='table_pred')
+                        # dcc.Graph( id='PredictTable', figure=pred_pric_tab),
                     ]), width=4
                 )
 

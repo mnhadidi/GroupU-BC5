@@ -9,7 +9,7 @@ from dash.dependencies import Input, Output
 
 # import internal project libraries
 from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot,create_kpi_div,get_pred_pric_tab
-from project_variables import coin_dict
+from project_variables import coin_dict,project_colors
 from ind_coins_layout import ind_coins_layout
 from sidebar import sidebar
 
@@ -25,7 +25,7 @@ server = app.server
 content = html.Div(ind_coins_layout, id="page-content")
 
 # gets sidebar from sidebar.py
-app.layout = html.Div([dcc.Location(id="url"), sidebar,content])
+app.layout = html.Div([dcc.Location(id="url"), sidebar,content],style={"background-color": project_colors['background']})
 
 ####################
 # sidebar callback
@@ -53,7 +53,8 @@ def render_page_content(pathname):
     [Output(component_id='Graph1', component_property='figure'),
      Output(component_id='date', component_property='children'),
      Output(component_id='PredictGraph', component_property='figure'),
-     Output(component_id='kpiDiv', component_property='children')],
+     Output(component_id='kpiDiv', component_property='children'),
+     Output(component_id='table_pred', component_property='children')],
     [Input(component_id='coin_dropdown', component_property='value'),
      Input(component_id="data_radio", component_property="value")]
 )
@@ -72,10 +73,12 @@ def update_dashboard(coin_dropdown, data_radio):
     candlestick_fig = candlestick_fig_create(coin_df)
     prediction_fig = create_pred_plot(coin_df_for_plot, prediction, future_set, data_radio)
 
+    pred_table = get_pred_pric_tab(future_set)
+
     # update kpis div
     kpi_div = create_kpi_div(data_radio, coin_df)
 
-    return candlestick_fig, date, prediction_fig, kpi_div
+    return candlestick_fig, date, prediction_fig, kpi_div, pred_table
 
 # coin image change for ind coin page
 @app.callback(Output(component_id='symbol', component_property='src')

@@ -1,11 +1,10 @@
-from dash import html
+from dash import html, dash_table
 import dash_bootstrap_components as dbc
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 import plotly.graph_objs as go
 
-from project_variables import coin_dict, timeframe_tranf,timeframe_full_name
-
+from project_variables import coin_dict, timeframe_tranf,timeframe_full_name, project_colors
 
 ##########################
 # CANDLESTICK FIGURE
@@ -15,14 +14,14 @@ def candlestick_fig_create(coin_df):
                                                        open=coin_df["Open"],
                                                        high=coin_df["High"],
                                                        low=coin_df["Low"],
-                                                       close=coin_df["Close"])])
+                                                       close=coin_df["Close"],
+                                                     increasing_line_color=project_colors['green'],
+                                                     decreasing_line_color=project_colors['red'])])
 
     # Edit the layout
-    candlestick_fig.update_layout(xaxis_title='Date',
-                                                  yaxis_title='Price USD')
-
-    candlestick_fig.update_layout(xaxis_rangeslider_visible=False,
-                                                        margin=dict(l=20, r=16, t=20, b=20))
+    candlestick_fig.update_layout(xaxis_title='Date', yaxis_title='Price USD', plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+    candlestick_fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
+    candlestick_fig.update_layout(xaxis_rangeslider_visible=False,margin=dict(l=20, r=16, t=20, b=20))
 
     return candlestick_fig
 
@@ -73,7 +72,7 @@ def create_pred_plot(coin_df_for_plot, prediction,future_set,timeframe):
     prediction_fig = go.Figure()
     # Create and style traces
     prediction_fig = prediction_fig.add_trace(go.Scatter(x=coin_df_for_plot['Date'][days_plot:-60], y=coin_df_for_plot["Close"][days_plot:-60], name='Historical',
-                             line=dict(color='royalblue')))
+                             line=dict(color=project_colors['pink'])))
     prediction_fig = prediction_fig.add_trace(go.Scatter(x=future_set["Date"], y=prediction, name = 'Prediction',
                              line=dict(color='goldenrod')))
 
@@ -82,6 +81,10 @@ def create_pred_plot(coin_df_for_plot, prediction,future_set,timeframe):
                        yaxis_title='Price USD')
 
     prediction_fig = prediction_fig.update_layout(margin=dict(l=20, r=16, t=20, b=20))
+
+    prediction_fig.update_layout(xaxis_title='Date', yaxis_title='Price USD', plot_bgcolor='rgba(0,0,0,0)',
+                                  paper_bgcolor='rgba(0,0,0,0)')
+    prediction_fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
 
     prediction_fig = prediction_fig.update_layout(legend=dict(
         orientation="h",
@@ -99,13 +102,28 @@ def create_pred_plot(coin_df_for_plot, prediction,future_set,timeframe):
 
 def get_pred_pric_tab(future_set):
     new_data = future_set
-    new_data['Close'] = new_data['Close'].map('{:,.2f}'.format)
+    new_data['Close (USD)'] = new_data['Close'].map('{:,.2f}'.format)
     new_data['Date'] = new_data['Date'].dt.strftime('%d/%m/%Y')
+    new_data = new_data[['Date','Close (USD)']][0:10]
 
-    pred_pric_tab = go.Figure(data=[go.Table(header=dict(values=['Date', 'Pred price']),
-                                             cells=dict(values=[new_data['Date'][0:5], new_data['Close'][0:5]]))
-                                    ])
+    # pred_pric_tab = go.Figure(data=[go.Table(header=dict(values=['Date', 'Pred price']),
+    #                                          cells=dict(values=[new_data['Date'][0:10], new_data['Close'][0:10]]))
+    #                                 ])
 
+    pred_pric_tab = dash_table.DataTable(
+        data=new_data.to_dict('records'),
+        columns=[{"name": i, "id": i} for i in new_data.columns],
+        style_cell={'textAlign': 'center'},
+        style_header={
+            'backgroundColor': 'rgba(0,0,0,0.1)',
+            'color': 'white'
+        },
+        style_data={
+            'backgroundColor': 'rgba(0,0,0,0)',
+            'color': 'white'
+        },
+        id = 'tbl'
+    )
     return pred_pric_tab
 
 ##########################
@@ -132,9 +150,9 @@ def create_kpi_div(timeframe, coin_df):
 
     # get color to format day change
     if day_change >= 0:
-        color = '#309143'
+        color = project_colors['green']
     else:
-        color = '#b60a1c'
+        color = project_colors['red']
 
     kpi_div = dbc.Row([
                 dbc.Col([
@@ -147,7 +165,7 @@ def create_kpi_div(timeframe, coin_df):
                                     className="card-text",
                                 ),
                             ]
-                        ), style={'backgroundColor': '#6495ED', 'border-radius': '0px', 'border': '0px',
+                        ), style={'backgroundColor': project_colors['navy-blue'], 'border-radius': '0px', 'border': '0px',
                                   'color': '#ffffff'}
                     )
                 ], width=3),
@@ -162,7 +180,7 @@ def create_kpi_div(timeframe, coin_df):
                                     className="card-text",
                                 ),
                             ]
-                        ), style={'backgroundColor': '#E2ECFE', 'border-radius': '0px', 'border': '0px'}
+                        ), style={'backgroundColor': project_colors['navy-blue'], 'border-radius': '0px', 'border': '0px','color':'white'}
                     )
                 ], width=3),
 
@@ -170,13 +188,13 @@ def create_kpi_div(timeframe, coin_df):
                     dbc.Card(
                         dbc.CardBody(
                             [
-                                html.H4(max_price, className="card-title"),
+                                html.H4(max_price, className="card-title", style={'color': '#ffffff'}),
                                 html.P(
                                     high_string,
                                     className="card-text",
                                 ),
                             ]
-                        ), style={'backgroundColor': '#E2ECFE', 'border-radius': '0px', 'border': '0px'}
+                        ), style={'backgroundColor': project_colors['navy-blue'], 'border-radius': '0px', 'border': '0px','color':'white'}
                     )
                 ], width=3),
 
@@ -184,13 +202,13 @@ def create_kpi_div(timeframe, coin_df):
                     dbc.Card(
                         dbc.CardBody(
                             [
-                                html.H4(min_price, className="card-title"),
+                                html.H4(min_price, className="card-title", style={'color': '#ffffff'}),
                                 html.P(
                                     low_string,
                                     className="card-text",
                                 ),
                             ]
-                        ), style={'backgroundColor': '#E2ECFE', 'border-radius': '0px', 'border': '0px'}
+                        ), style={'backgroundColor': project_colors['navy-blue'], 'border-radius': '0px', 'border': '0px','color':'white'}
                     )
                 ], width=3)
 

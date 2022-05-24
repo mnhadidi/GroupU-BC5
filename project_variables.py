@@ -1,6 +1,16 @@
 ####################
 # setup variables
 ####################
+project_colors = {
+    'background':'#1A1A2E',
+    'dark-blue':'#16213E',
+    'navy-blue':'#0F3460',
+    'pink':'#E94560',
+    'white':'#FFFFFF',
+    'red':'#F6465D',
+    'green':'#0ECB81'
+}
+
 coin_dict = [
     {'label': "Cardano (ADA)", 'value': "ADA"},
     {'label': "Cosmos (ATOM)", 'value': "ATOM"},
