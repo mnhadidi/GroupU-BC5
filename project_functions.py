@@ -5,8 +5,8 @@ from sklearn.model_selection import train_test_split
 import plotly.graph_objs as go
 
 # import internal project libraries
-from project_variables import coin_dict, timeframe_tranf,timeframe_full_name
-from project_variables import project_colors,time_frame_options,start_info
+from project_variables import timeframe_tranf, timeframe_full_name
+from project_variables import project_colors, time_frame_options, start_info
 
 ##########################
 # CANDLESTICK FIGURE
@@ -14,15 +14,16 @@ from project_variables import project_colors,time_frame_options,start_info
 ##########################
 def candlestick_fig_create(coin_df):
     candlestick_fig = go.Figure(data=[go.Candlestick(x=coin_df.index.values,
-                                                       open=coin_df["Open"],
-                                                       high=coin_df["High"],
-                                                       low=coin_df["Low"],
-                                                       close=coin_df["Close"],
+                                                     open=coin_df["Open"],
+                                                     high=coin_df["High"],
+                                                     low=coin_df["Low"],
+                                                     close=coin_df["Close"],
                                                      increasing_line_color=project_colors['green'],
                                                      decreasing_line_color=project_colors['red'])])
 
     # Edit the layout
-    candlestick_fig.update_layout(xaxis_title='Date', yaxis_title='Price USD', plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+    candlestick_fig.update_layout(xaxis_title='Date', yaxis_title='Price USD', plot_bgcolor='rgba(0,0,0,0)',
+                                  paper_bgcolor='rgba(0,0,0,0)')
     candlestick_fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
     candlestick_fig.update_layout(xaxis_rangeslider_visible=False,margin=dict(l=20, r=16, t=20, b=20))
 

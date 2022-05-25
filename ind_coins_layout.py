@@ -1,4 +1,4 @@
-import dash
+# import dash
 from dash import dcc
 from dash import html
 import dash_bootstrap_components as dbc
@@ -10,7 +10,7 @@ from yfinance import download
 # import internal project libraries
 from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot
 from project_functions import func_currency_dropdown, create_kpi_div, get_pred_pric_tab, func_button_group
-from project_variables import project_colors, CONTENT_STYLE, coin_dict_v2
+from project_variables import CONTENT_STYLE, coin_dict_v2
 from project_variables import start_info as si
 
 
@@ -58,17 +58,19 @@ ind_coins_layout = html.Div([
     dbc.Container([
         html.Div([
             dbc.Row([
-                dbc.Col(html.Img(src='', id='symbol', style={'width':'64px','height':'64px'}), width=1),
+                dbc.Col(html.Img(src='', id='symbol', style={'width': '64px', 'height': '64px'}), width=1),
                 dbc.Col(currency_dropdown, width=4),
 
                 dbc.Col(
                     html.Div([
-                        html.H5(date, id='date', style={'text-align': 'right', 'padding-right': '16px','color':'white'}),
+                        html.H5(date, id='date', style={'text-align': 'right',
+                                                        'padding-right': '16px',
+                                                        'color': 'white'}),
                         button_group
-                    ])
-                    , width=7
-                )]
-                , style={'padding-top': '20px', 'padding-bottom': '20px'}, className='align-items-center')
+                    ]),
+                    width=7
+                )],
+                style={'padding-top': '20px', 'padding-bottom': '20px'}, className='align-items-center')
         ]),
 
         html.Div(id='kpiDiv', children=[kpi_div], style={'padding-top': '40px'}),
@@ -83,18 +85,18 @@ ind_coins_layout = html.Div([
                 dbc.Col(
                     html.Div([
                         html.H2('Historical and Predicted Values'),
-                        dcc.Graph( id='PredictGraph', figure=prediction_fig),
+                        dcc.Graph(id='PredictGraph', figure=prediction_fig),
                     ]), width=8
                 ),
 
                 dbc.Col(
                     html.Div([
                         html.H2('Next 10 Days Prediction'),
-                        html.Div(children=[pred_pric_tab],id='table_pred')
+                        html.Div(children=[pred_pric_tab], id='table_pred')
                     ]), width=4
                 )
             ])
-        ] , style={'padding-top': '40px'})
+        ], style={'padding-top': '40px'})
     ]),
 
 
