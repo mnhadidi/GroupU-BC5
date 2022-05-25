@@ -92,10 +92,10 @@ def update_dashboard(coin_dropdown, data_radio):
     ,Input(component_id='coin_dropdown', component_property='value'))
 def update_coin_image(coin_dropdown):
     long_form = coin_dict_v2[coin_dropdown]
-    URL_begin = 'https://cryptologos.cc/logos/'
-    URL_end = '-logo.png?v=022'
+    url_begin = 'https://cryptologos.cc/logos/'
+    url_end = '-logo.png?v=022'
     long_form = long_form.lower().replace("(","").replace(")","").replace(" ","-")
-    full_url = URL_begin + long_form + URL_end
+    full_url = url_begin + long_form + url_end
 
     r = requests.get(full_url)
     if r.status_code >= 200 and r.status_code <= 299:

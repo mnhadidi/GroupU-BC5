@@ -4,8 +4,8 @@ from dash import html
 import dash_bootstrap_components as dbc
 from pandas import to_datetime
 from yfinance import download
-from dash.dependencies import Input, Output
-from sidebar import sidebar
+# from dash.dependencies import Input, Output
+# from sidebar import sidebar
 
 # import internal project libraries
 from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot
