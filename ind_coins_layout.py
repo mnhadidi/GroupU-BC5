@@ -8,65 +8,40 @@ from dash.dependencies import Input, Output
 from sidebar import sidebar
 
 # import internal project libraries
-from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot,create_kpi_div,get_pred_pric_tab
-from project_variables import coin_dict, project_colors
+from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot
+from project_functions import func_currency_dropdown, create_kpi_div, get_pred_pric_tab, func_button_group
+from project_variables import coin_dict, project_colors, CONTENT_STYLE
+from project_variables import start_info as si
+
+
+####################
+# DATA
+####################
 
 # initializing coin
-coin = coin_dict[0]['value']
+coin = si['coin']
 
 # initializing coin df
-coin_df = download(tickers=(coin + '-USD'), period='1y', interval='1d')
+coin_df = download(tickers=(coin + '-USD'), period=si['time'], interval=si['interval'])
 
 # get date last updated
 date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strftime("%b %d %Y, %H:%M")
 
 
 ####################
-# visuals
+# VISUALS
 ####################
 
-# currency dropdown
+# create currency dropdown
+currency_dropdown = func_currency_dropdown(coin_dict, coin)
 
-currency_dropdown = html.Div([
-                        dcc.Dropdown(
-                            id='coin_dropdown',
-                            options=coin_dict,
-                            value=coin,
-                            multi=False,
-                            clearable=False,
-                            style={"min-width": "1rem"}
-                        ),
-                    ], className='align-middle')
-# buttons for date period
-button_group = html.Div(
-    [
-        dbc.RadioItems(
-            id="data_radio",
-            className="btn-group",
-            inputClassName="btn-check",
-            labelClassName="btn btn-outline-primary",
-            labelCheckedClassName="active",
-            options=[
-                {"label": "5 days", "value": '5d'},
-                {"label": "1 month", "value": '1mo'},
-                {"label": "6 months", "value": '6mo'},
-                {"label": "1 year", "value": '1y'},
-                {"label": "Full", "value": 'max'},
-                # acceptable periods
-                # “1d”, “5d”, “1mo”, “3mo”, “6mo”, “1y”, “2y”, “5y”, “10y”, “ytd”, “max”
-            ],
-            value='1y',
-
-        ),
-    ],
-    className="radio-group",
-    style={'text-align': 'right', 'padding-right': '16px'}
-)
+# create button group for date period
+button_group = func_button_group()
 
 # create KPI div
 kpi_div = create_kpi_div('1y', coin_df)
 
-# create candlestick graphs
+# create candlestick graph
 candlestick_fig = candlestick_fig_create(coin_df)
 
 # linear regression plot
@@ -74,14 +49,11 @@ coin_df_new, prediction, future_set, coin_df_for_plot = run_linear_regression(co
 prediction_fig = create_pred_plot(coin_df_for_plot, prediction, future_set, '1y')
 pred_pric_tab = get_pred_pric_tab(future_set)
 
-# add some padding.
-CONTENT_STYLE = {
-    "margin-left": "17rem",
-    "margin-right": "0",
-    "padding": "1rem 1rem",
-}
 
-# layout for main dash app
+####################
+# FINAL LAYOUT
+####################
+
 ind_coins_layout = html.Div([
 
     dbc.Container([
@@ -104,7 +76,7 @@ ind_coins_layout = html.Div([
 
         html.Div([
             html.H2('Price Analysis'),
-            dcc.Graph(id='Graph1', figure=candlestick_fig)
+            dcc.Graph(id='priceGraph', figure=candlestick_fig)
         ], style={'padding-top': '40px'}),
 
         html.Div([
@@ -120,14 +92,9 @@ ind_coins_layout = html.Div([
                     html.Div([
                         html.H2('Next 10 Days Prediction'),
                         html.Div(children=[pred_pric_tab],id='table_pred')
-                        # dcc.Graph( id='PredictTable', figure=pred_pric_tab),
                     ]), width=4
                 )
-
             ])
-
-
-
         ] , style={'padding-top': '40px'})
     ]),
 

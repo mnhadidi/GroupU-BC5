@@ -10,6 +10,7 @@ from dash.dependencies import Input, Output
 # import internal project libraries
 from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot,create_kpi_div,get_pred_pric_tab
 from project_variables import coin_dict,project_colors
+from project_variables import start_info as si
 from ind_coins_layout import ind_coins_layout
 from sidebar import sidebar
 
@@ -18,18 +19,23 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_
 app.title = 'CryptoDash'
 server = app.server
 
-####################
-# start layout
-####################
-
+# get content
 content = html.Div(ind_coins_layout, id="page-content")
 
 # gets sidebar from sidebar.py
 app.layout = html.Div([dcc.Location(id="url"), sidebar,content],style={"background-color": project_colors['background']})
 
+
 ####################
+# CALLBACKS
+####################
+
+
+############################################################################################################################################
+# this sidebar doesn't look correct, double check before continuing
+############################################################################################################################################
+
 # sidebar callback
-####################
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
@@ -45,12 +51,12 @@ def render_page_content(pathname):
         ]
     )
 
+############################################################################################################################################
+############################################################################################################################################
 
-####################
 # app callback
-####################
 @app.callback(
-    [Output(component_id='Graph1', component_property='figure'),
+    [Output(component_id='priceGraph', component_property='figure'),
      Output(component_id='date', component_property='children'),
      Output(component_id='PredictGraph', component_property='figure'),
      Output(component_id='kpiDiv', component_property='children'),
@@ -80,7 +86,7 @@ def update_dashboard(coin_dropdown, data_radio):
 
     return candlestick_fig, date, prediction_fig, kpi_div, pred_table
 
-# coin image change for ind coin page
+# coin image call back
 @app.callback(Output(component_id='symbol', component_property='src')
     ,Input(component_id='coin_dropdown', component_property='value'))
 def update_coin_image(coin_dropdown):

@@ -1,13 +1,16 @@
-from dash import html, dash_table
+from dash import html, dash_table, dcc
 import dash_bootstrap_components as dbc
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 import plotly.graph_objs as go
 
-from project_variables import coin_dict, timeframe_tranf,timeframe_full_name, project_colors
+# import internal project libraries
+from project_variables import coin_dict, timeframe_tranf,timeframe_full_name
+from project_variables import project_colors,time_frame_options,start_info
 
 ##########################
 # CANDLESTICK FIGURE
+# used on ind_coins_layout
 ##########################
 def candlestick_fig_create(coin_df):
     candlestick_fig = go.Figure(data=[go.Candlestick(x=coin_df.index.values,
@@ -28,6 +31,7 @@ def candlestick_fig_create(coin_df):
 
 ##########################
 # LINEAR REGRESSION MODEL
+# used on ind_coins_layout
 ##########################
 
 def run_linear_regression(prediction_coin_df, coin_df):
@@ -64,6 +68,7 @@ def run_linear_regression(prediction_coin_df, coin_df):
 
 ##########################
 # LINEAR REGRESSION PLOT
+# used on ind_coins_layout
 ##########################
 def create_pred_plot(coin_df_for_plot, prediction,future_set,timeframe):
     days_show = timeframe_tranf[timeframe]
@@ -98,6 +103,7 @@ def create_pred_plot(coin_df_for_plot, prediction,future_set,timeframe):
 
 ##########################
 # TABLE WITH NEXT PREDICTED PRICES
+# used on ind_coins_layout
 ##########################
 
 def get_pred_pric_tab(future_set):
@@ -128,6 +134,7 @@ def get_pred_pric_tab(future_set):
 
 ##########################
 # KPI DIV
+# used on ind_coins_layout
 ##########################
 def create_kpi_div(timeframe, coin_df):
     # get values
@@ -215,3 +222,49 @@ def create_kpi_div(timeframe, coin_df):
             ])
 
     return kpi_div
+
+
+##########################
+# CURRENCY DROPDOWN
+# used on ind_coins_layout
+##########################
+
+def func_currency_dropdown(coin_dict, coin):
+    currency_dropdown = html.Div([
+                            dcc.Dropdown(
+                                id='coin_dropdown',
+                                options=coin_dict,
+                                value=coin,
+                                multi=False,
+                                clearable=False,
+                                style={"min-width": "1rem"}
+                            ),
+                        ], className='align-middle')
+
+    return currency_dropdown
+
+##########################
+# BUTTON GROUP
+# used on ind_coins_layout
+##########################
+
+def func_button_group():
+
+    button_group = html.Div(
+        [
+            dbc.RadioItems(
+                id="data_radio",
+                className="btn-group",
+                inputClassName="btn-check",
+                labelClassName="btn btn-outline-primary",
+                labelCheckedClassName="active",
+                options=time_frame_options,
+                value=start_info['time'],
+
+            ),
+        ],
+        className="radio-group",
+        style={'text-align': 'right', 'padding-right': '16px'}
+    )
+
+    return button_group

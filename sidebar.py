@@ -46,7 +46,8 @@ sidebar_bottom = html.Div([
     html.H5('made with 🧡 and 🍕', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080'}),
     html.H5('by Group U', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080'}),
     html.H5('Beatriz Ferreira | Beatriz Peres | Diogo Marques | Miriam Hadidi Pereira'
-            , style={'text-align': 'center', 'font-size': '8pt', 'color': '#808080'})
+            , style={'text-align': 'center', 'font-size': '8pt', 'color': '#808080'}),
+    html.H5('NOVA IMS', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080', 'font-weight': 'bold'})
 
 ],style=SIDEBAR_BOTTOM)
 

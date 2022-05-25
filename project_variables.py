@@ -1,6 +1,7 @@
 ####################
-# setup variables
+# project variables
 ####################
+
 project_colors = {
     'background':'#1A1A2E',
     'dark-blue':'#16213E',
@@ -10,6 +11,18 @@ project_colors = {
     'red':'#F6465D',
     'green':'#0ECB81'
 }
+
+# content style for right side of dashboard
+CONTENT_STYLE = {
+    "margin-left": "17rem",
+    "margin-right": "0",
+    "padding": "1rem 1rem",
+}
+
+
+####################
+# crypto variables
+####################
 
 coin_dict = [
     {'label': "Cardano (ADA)", 'value': "ADA"},
@@ -33,9 +46,30 @@ timeframe_tranf = {
     , '2y': 730, '5y': 1825, '10y': 3650
     , 'max': 9999999}
 
+
+
 timeframe_full_name = {
     '1d': '1 day', '5d': '5 days', '1mo': '1 month'
     , '3mo': '3 months', '6mo': '6 months', '1y': '1 year'
     , '2y': '2 years', '5y': '5 years', '10y': '10 years'
     , 'max': 'All time'
 }
+
+start_info = {
+    # make sure the coin name is one of the 'values' of coin_dict
+    'coin':'ADA',
+    # this is the selected intial timeframe for the crypto insights dash
+    'time':'1y',
+    # this is the time between data gathered from yfinance, started with 1d
+    'interval':'1d'
+}
+
+# these are the options for the button group on the crypto insights
+# make sure it matches timeframe_full_name options
+time_frame_options = [
+    {"label": "5 days", "value": '5d'},
+    {"label": "1 month", "value": '1mo'},
+    {"label": "6 months", "value": '6mo'},
+    {"label": "1 year", "value": '1y'},
+    {"label": "Full", "value": 'max'}
+]
