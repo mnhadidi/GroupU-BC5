@@ -224,10 +224,10 @@ def create_kpi_div(timeframe, coin_df):
     return kpi_div
 
 
-##########################
-# CURRENCY DROPDOWN
-# used on ind_coins_layout
-##########################
+"""
+CURRENCY DROPDOWN
+used on ind_coins_layout
+"""
 
 def func_currency_dropdown(coin_dict, coin):
     currency_dropdown = html.Div([
@@ -235,8 +235,9 @@ def func_currency_dropdown(coin_dict, coin):
                                 id='coin_dropdown',
                                 options=coin_dict,
                                 value=coin,
+                                placeholder="Write a coin or ticker",
                                 multi=False,
-                                clearable=False,
+                                clearable=True, # this one was false
                                 style={"min-width": "1rem"}
                             ),
                         ], className='align-middle')

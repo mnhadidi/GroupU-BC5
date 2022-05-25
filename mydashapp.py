@@ -14,6 +14,13 @@ from project_variables import start_info as si
 from ind_coins_layout import ind_coins_layout
 from sidebar import sidebar
 
+# get all coins in existence of mankind
+import pandas as pd
+coins_df = pd.read_csv('/assets/coin-list.csv')
+coin_dict_v2 = coins_df.to_dict()
+
+
+
 # setup dash app and heroku server info
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 app.title = 'CryptoDash'

@@ -24,6 +24,11 @@ CONTENT_STYLE = {
 # crypto variables
 ####################
 
+# get all coins in existence of mankind
+import pandas as pd
+coins_df = pd.read_csv('/assets/coin-list.csv')
+coin_dict_v2 = coins_df.to_dict()
+
 coin_dict = [
     {'label': "Cardano (ADA)", 'value': "ADA"},
     {'label': "Cosmos (ATOM)", 'value': "ATOM"},

@@ -10,7 +10,7 @@ from sidebar import sidebar
 # import internal project libraries
 from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot
 from project_functions import func_currency_dropdown, create_kpi_div, get_pred_pric_tab, func_button_group
-from project_variables import coin_dict, project_colors, CONTENT_STYLE
+from project_variables import project_colors, CONTENT_STYLE, coin_dict_v2
 from project_variables import start_info as si
 
 
@@ -33,7 +33,7 @@ date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strfti
 ####################
 
 # create currency dropdown
-currency_dropdown = func_currency_dropdown(coin_dict, coin)
+currency_dropdown = func_currency_dropdown(coin_dict_v2, coin)
 
 # create button group for date period
 button_group = func_button_group()
