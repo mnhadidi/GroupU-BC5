@@ -26,8 +26,8 @@ CONTENT_STYLE = {
 
 # get all coins in existence of mankind
 import pandas as pd
-coins_df = pd.read_csv('/assets/coin-list.csv')
-coin_dict_v2 = coins_df.to_dict()
+coins_df = pd.read_csv("C:/Users/Mimi/PycharmProjects/cryptodash-groupu/assets/coin-list.csv")
+coin_dict_v2 = coins_df.set_index('Coin')['Name'].to_dict()
 
 coin_dict = [
     {'label': "Cardano (ADA)", 'value': "ADA"},

@@ -27,7 +27,6 @@ coin_df = download(tickers=(coin + '-USD'), period=si['time'], interval=si['inte
 # get date last updated
 date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strftime("%b %d %Y, %H:%M")
 
-
 ####################
 # VISUALS
 ####################
@@ -59,7 +58,7 @@ ind_coins_layout = html.Div([
     dbc.Container([
         html.Div([
             dbc.Row([
-                dbc.Col(html.Img(src='', id='symbol'), width=1),
+                dbc.Col(html.Img(src='', id='symbol', style={'width':'64px','height':'64px'}), width=1),
                 dbc.Col(currency_dropdown, width=4),
 
                 dbc.Col(

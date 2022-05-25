@@ -5,21 +5,15 @@ import dash_bootstrap_components as dbc
 from pandas import to_datetime
 from yfinance import download
 from dash.dependencies import Input, Output
+import requests
 
 
 # import internal project libraries
 from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot,create_kpi_div,get_pred_pric_tab
-from project_variables import coin_dict,project_colors
+from project_variables import coin_dict,project_colors,coin_dict_v2
 from project_variables import start_info as si
 from ind_coins_layout import ind_coins_layout
 from sidebar import sidebar
-
-# get all coins in existence of mankind
-import pandas as pd
-coins_df = pd.read_csv('/assets/coin-list.csv')
-coin_dict_v2 = coins_df.to_dict()
-
-
 
 # setup dash app and heroku server info
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
@@ -97,8 +91,17 @@ def update_dashboard(coin_dropdown, data_radio):
 @app.callback(Output(component_id='symbol', component_property='src')
     ,Input(component_id='coin_dropdown', component_property='value'))
 def update_coin_image(coin_dropdown):
-    new_src = "/assets/" + coin_dropdown + '.png'
-    return new_src
+    long_form = coin_dict_v2[coin_dropdown]
+    URL_begin = 'https://cryptologos.cc/logos/'
+    URL_end = '-logo.png?v=022'
+    long_form = long_form.lower().replace("(","").replace(")","").replace(" ","-")
+    full_url = URL_begin + long_form + URL_end
+
+    r = requests.get(full_url)
+    if r.status_code >= 200 and r.status_code <= 299:
+        return full_url
+    else:
+        return '/assets/other.png'
 
 if __name__ == '__main__':
     app.run_server(debug=True)
