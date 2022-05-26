@@ -44,9 +44,9 @@ kpi_div = create_kpi_div('1y', coin_df)
 candlestick_fig = candlestick_fig_create(coin_df)
 
 # linear regression plot
-coin_df_new, prediction, future_set, coin_df_for_plot = run_linear_regression(coin_df, coin_df)
-prediction_fig = create_pred_plot(coin_df_for_plot, prediction, future_set, '1y')
-pred_pric_tab = get_pred_pric_tab(future_set)
+orig_coin_df, prediction, dates = run_linear_regression(coin_df)
+prediction_fig = create_pred_plot(orig_coin_df, prediction, dates)
+pred_pric_tab = get_pred_pric_tab(prediction, dates)
 
 
 ####################

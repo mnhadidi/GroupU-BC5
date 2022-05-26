@@ -10,7 +10,7 @@ import requests
 
 # import internal project libraries
 from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot,create_kpi_div,get_pred_pric_tab
-from project_variables import coin_dict,project_colors,coin_dict_v2
+from project_variables import project_colors,coin_dict_v2
 from project_variables import start_info as si
 from ind_coins_layout import ind_coins_layout
 from sidebar import sidebar
@@ -74,18 +74,18 @@ def update_dashboard(coin_dropdown, data_radio):
     date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strftime("%b %d %Y, %H:%M")
 
     # update prediction
-    coin_df_new, prediction, future_set, coin_df_for_plot = run_linear_regression(prediction_coin_df, coin_df)
+    orig_coin_df, prediction, dates = run_linear_regression(coin_df)
 
     # update graphs
     candlestick_fig = candlestick_fig_create(coin_df)
-    prediction_fig = create_pred_plot(coin_df_for_plot, prediction, future_set, data_radio)
+    prediction_fig = create_pred_plot(orig_coin_df, prediction, dates)
 
-    pred_table = get_pred_pric_tab(future_set)
+    pred_pric_tab = get_pred_pric_tab(prediction, dates)
 
     # update kpis div
     kpi_div = create_kpi_div(data_radio, coin_df)
 
-    return candlestick_fig, date, prediction_fig, kpi_div, pred_table
+    return candlestick_fig, date, prediction_fig, kpi_div, pred_pric_tab
 
 # coin image call back
 @app.callback(Output(component_id='symbol', component_property='src')
