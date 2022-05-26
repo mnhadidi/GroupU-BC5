@@ -37,79 +37,6 @@ def candlestick_fig_create(coin_df):
 # used on ind_coins_layout
 ##########################
 
-# def run_linear_regression(prediction_coin_df, coin_df):
-#     # Define the set of variables, to distinguish the variable that is the target one
-#     required_features = ['Open', 'High', 'Low', 'Volume']
-#     output_label = 'Close'
-#
-#     coin_df_new = prediction_coin_df.reset_index()
-#     coin_df_for_plot = coin_df.reset_index()
-#
-#     # define train test split, with 80% for train and 20% for test
-#     X_train_lr, X_test_lr, y_train_lr, y_test_lr = train_test_split(
-#         coin_df_new[required_features],
-#         coin_df_new[output_label],
-#         test_size=0.2,
-#         shuffle=False
-#     )
-#
-#     # fit the model with the training data
-#     model = LinearRegression()
-#     model.fit(X_train_lr, y_train_lr)
-#
-#     # define parameters
-#     LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)
-#
-#     # define a new dataset with the predictions for the next 30 days
-#     future_set = coin_df_new.shift(periods=30).tail(30)
-#
-#     # get the predictions
-#     prediction = model.predict(future_set[required_features])
-#
-#     return coin_df_new, prediction, future_set, coin_df_for_plot
-
-
-##########################
-# LINEAR REGRESSION PLOT
-# used on ind_coins_layout
-##########################
-# def create_pred_plot(coin_df_for_plot, prediction,future_set,timeframe):
-#     days_show = timeframe_tranf[timeframe]
-#     days_plot = -60 - days_show
-#
-#     prediction_fig = go.Figure()
-#     # Create and style traces
-#     prediction_fig = prediction_fig.add_trace(go.Scatter(x=coin_df_for_plot['Date'][days_plot:-60], y=coin_df_for_plot["Close"][days_plot:-60], name='Historical',
-#                              line=dict(color=project_colors['pink'])))
-#     prediction_fig = prediction_fig.add_trace(go.Scatter(x=future_set["Date"], y=prediction, name = 'Prediction',
-#                              line=dict(color='goldenrod')))
-#
-#     # Edit the layout
-#     prediction_fig = prediction_fig.update_layout(xaxis_title='Date',
-#                        yaxis_title='Price USD')
-#
-#     prediction_fig = prediction_fig.update_layout(margin=dict(l=20, r=16, t=20, b=20))
-#
-#     prediction_fig.update_layout(xaxis_title='Date', yaxis_title='Price USD', plot_bgcolor='rgba(0,0,0,0)',
-#                                   paper_bgcolor='rgba(0,0,0,0)')
-#     prediction_fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
-#
-#     prediction_fig = prediction_fig.update_layout(legend=dict(
-#         orientation="h",
-#         yanchor="bottom",
-#         y=1.02,
-#         xanchor="right",
-#         x=1
-#     ))
-#
-#     return prediction_fig
-
-
-##########################
-# LINEAR REGRESSION MODEL V02
-# used on ind_coins_layout
-##########################
-
 def run_linear_regression(orig_coin_df):
     orig_coin_df.dropna(inplace=True)
     orig_coin_df = orig_coin_df.reset_index()
@@ -138,13 +65,11 @@ def run_linear_regression(orig_coin_df):
 
     prediction = prediction[0:30]
 
-    print(prediction)
-
     return orig_coin_df, prediction, dates
 
 
 ##########################
-# LINEAR REGRESSION PLOT V2
+# LINEAR REGRESSION PLOT
 # used on ind_coins_layout
 ##########################
 def create_pred_plot(orig_coin_df, prediction, dates):
@@ -179,37 +104,6 @@ def create_pred_plot(orig_coin_df, prediction, dates):
 
 ##########################
 # TABLE WITH NEXT PREDICTED PRICES
-# used on ind_coins_layout
-##########################
-
-# def get_pred_pric_tab(future_set):
-#     new_data = future_set
-#     new_data['Close (USD)'] = new_data['Close'].map('{:,.2f}'.format)
-#     new_data['Date'] = new_data['Date'].dt.strftime('%d/%m/%Y')
-#     new_data = new_data[['Date','Close (USD)']][0:10]
-#
-#     # pred_pric_tab = go.Figure(data=[go.Table(header=dict(values=['Date', 'Pred price']),
-#     #                                          cells=dict(values=[new_data['Date'][0:10], new_data['Close'][0:10]]))
-#     #                                 ])
-#
-#     pred_pric_tab = dash_table.DataTable(
-#         data=new_data.to_dict('records'),
-#         columns=[{"name": i, "id": i} for i in new_data.columns],
-#         style_cell={'textAlign': 'center'},
-#         style_header={
-#             'backgroundColor': 'rgba(0,0,0,0.1)',
-#             'color': 'white'
-#         },
-#         style_data={
-#             'backgroundColor': 'rgba(0,0,0,0)',
-#             'color': 'white'
-#         },
-#         id = 'tbl'
-#     )
-#     return pred_pric_tab
-
-##########################
-# TABLE WITH NEXT PREDICTED PRICES V02
 # used on ind_coins_layout
 ##########################
 
