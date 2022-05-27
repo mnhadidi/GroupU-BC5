@@ -7,10 +7,10 @@ from yfinance import download
 from dash.dependencies import Input, Output
 import requests
 
-
 # import internal project libraries
-from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot,create_kpi_div,get_pred_pric_tab
-from project_variables import project_colors,coin_dict_v2
+from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot, create_kpi_div, \
+    get_pred_pric_tab
+from project_variables import project_colors, coin_dict_v2
 from project_variables import start_info as si
 from ind_coins_layout import ind_coins_layout
 from sidebar import sidebar
@@ -24,7 +24,8 @@ server = app.server
 content = html.Div(ind_coins_layout, id="page-content")
 
 # gets sidebar from sidebar.py
-app.layout = html.Div([dcc.Location(id="url"), sidebar,content],style={"background-color": project_colors['background']})
+app.layout = html.Div([dcc.Location(id="url"), sidebar, content],
+                      style={"background-color": project_colors['background']})
 
 
 ####################
@@ -51,6 +52,7 @@ def render_page_content(pathname):
             html.P(f"The pathname {pathname} was not recognised..."),
         ]
     )
+
 
 ############################################################################################################################################
 ############################################################################################################################################
@@ -87,21 +89,23 @@ def update_dashboard(coin_dropdown, data_radio):
 
     return candlestick_fig, date, prediction_fig, kpi_div, pred_pric_tab
 
+
 # coin image call back
 @app.callback(Output(component_id='symbol', component_property='src')
-    ,Input(component_id='coin_dropdown', component_property='value'))
+    , Input(component_id='coin_dropdown', component_property='value'))
 def update_coin_image(coin_dropdown):
     long_form = coin_dict_v2[coin_dropdown]
     url_begin = 'https://cryptologos.cc/logos/'
     url_end = '-logo.png?v=022'
-    long_form = long_form.lower().replace("(","").replace(")","").replace(" ","-")
+    long_form = long_form.lower().replace("(", "").replace(")", "").replace(" ", "-")
     full_url = url_begin + long_form + url_end
 
     r = requests.get(full_url)
-    if r.status_code >= 200 and r.status_code <= 299:
+    if 200 <= r.status_code <= 299:
         return full_url
     else:
         return '/assets/other.png'
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

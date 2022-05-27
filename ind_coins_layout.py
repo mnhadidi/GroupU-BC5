@@ -47,6 +47,8 @@ candlestick_fig = candlestick_fig_create(coin_df)
 orig_coin_df, prediction, dates = run_linear_regression(coin_df)
 prediction_fig = create_pred_plot(orig_coin_df, prediction, dates)
 pred_pric_tab = get_pred_pric_tab(prediction, dates)
+# #rsi_gauge
+# rsi_gauge = create_rsi_gauge(get_rsi_value(coin_df))
 
 
 ####################
@@ -60,7 +62,6 @@ ind_coins_layout = html.Div([
             dbc.Row([
                 dbc.Col(html.Img(src='', id='symbol', style={'width': '64px', 'height': '64px'}), width=1),
                 dbc.Col(currency_dropdown, width=4),
-
                 dbc.Col(
                     html.Div([
                         html.H5(date, id='date', style={'text-align': 'right',
