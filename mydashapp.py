@@ -14,6 +14,7 @@ from project_variables import project_colors, coin_dict_v2
 from project_variables import start_info as si
 from ind_coins_layout import ind_coins_layout
 from sidebar import sidebar
+from market_over import market_over
 
 # setup dash app and heroku server info
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
@@ -22,6 +23,7 @@ server = app.server
 
 # get content
 content = html.Div(ind_coins_layout, id="page-content")
+content_market_over = html.Div(market_over, id='market_over')
 
 # gets sidebar from sidebar.py
 app.layout = html.Div([dcc.Location(id="url"), sidebar, content],
@@ -43,7 +45,7 @@ def render_page_content(pathname):
     if pathname == "/":
         return content
     elif pathname == "/market":
-        return html.P("This is the content of page 1. Yay!")
+        return content_market_over
     # If the user tries to reach a different page, return a 404 message
     return dbc.Jumbotron(
         [
