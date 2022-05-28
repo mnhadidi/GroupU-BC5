@@ -8,7 +8,7 @@ from dash.dependencies import Input, Output
 import requests
 
 # import internal project libraries
-from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot, create_kpi_div, \
+from ind_coin_func import candlestick_fig_create, run_linear_regression, create_pred_plot, create_kpi_div, \
     get_pred_pric_tab
 from project_variables import project_colors, coin_dict_v2
 from project_variables import start_info as si

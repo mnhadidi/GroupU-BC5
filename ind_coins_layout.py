@@ -8,8 +8,8 @@ from yfinance import download
 # from sidebar import sidebar
 
 # import internal project libraries
-from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot
-from project_functions import func_currency_dropdown, create_kpi_div, get_pred_pric_tab, func_button_group
+from ind_coin_func import candlestick_fig_create, run_linear_regression, create_pred_plot
+from ind_coin_func import func_currency_dropdown, create_kpi_div, get_pred_pric_tab, func_button_group
 from project_variables import CONTENT_STYLE, coin_dict_v2
 from project_variables import start_info as si
 
