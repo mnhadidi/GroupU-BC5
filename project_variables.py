@@ -11,7 +11,8 @@ project_colors = {
     'pink': '#E94560',
     'white': '#FFFFFF',
     'red': '#F6465D',
-    'green': '#0ECB81'
+    'green': '#0ECB81',
+    'gold':'goldenrod'
 }
 
 # content style for right side of dashboard
@@ -69,9 +70,10 @@ time_frame_options = [
 ####################
 
 mkt_over_info = {
-    # THIS IS THE CORRECT API KEY
+    # THESE ARE THE CORRECT AVALUES
     # 'api_key': '{d4462bd4925c7c2d3d2adad9221d5e897dd7178ddac5a0558f76c978df7bd8da}',
-    'api_key': '{}',
+    # 'api_link_top_ten':'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD&api_key='
 
-    'api_link_top_ten':'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD&api_key='
+    'api_key': '{}',
+    'api_link_top_ten':''
 }

@@ -22,8 +22,8 @@ app.title = 'CryptoDash'
 server = app.server
 
 # get content
-content = html.Div(ind_coins_layout, id="page-content")
-content_market_over = html.Div(market_over, id='market_over')
+content = html.Div(children=[ind_coins_layout], id="page-content")
+# content_market_over = html.Div(market_over, id='market_over')
 
 # gets sidebar from sidebar.py
 app.layout = html.Div([dcc.Location(id="url"), sidebar, content],
@@ -34,18 +34,13 @@ app.layout = html.Div([dcc.Location(id="url"), sidebar, content],
 # CALLBACKS
 ####################
 
-
-############################################################################################################################################
-# this sidebar doesn't look correct, double check before continuing
-############################################################################################################################################
-
 # sidebar callback
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
         return content
     elif pathname == "/market":
-        return content_market_over
+        return html.Div(market_over, id='market_over')
     # If the user tries to reach a different page, return a 404 message
     return dbc.Jumbotron(
         [
@@ -55,9 +50,6 @@ def render_page_content(pathname):
         ]
     )
 
-
-############################################################################################################################################
-############################################################################################################################################
 
 # app callback
 @app.callback(

@@ -84,7 +84,7 @@ def create_pred_plot(orig_coin_df, prediction, dates):
                    line=dict(color=project_colors['pink'])))
     prediction_fig = prediction_fig.add_trace(
         go.Scatter(x=dates, y=prediction, name='Prediction',
-                   line=dict(color='goldenrod')))
+                   line=dict(color=project_colors['gold'])))
 
     # Edit the layout
     prediction_fig = prediction_fig.update_layout(xaxis_title='Date',
@@ -132,34 +132,11 @@ def get_pred_pric_tab(prediction, dates):
             html.Tr([html.Td(new_data['Date'][row]),
                      html.Td(new_data['Close (USD)'][row])])))
 
-    # for line in prediction:
-    #     row = html.Tr([html.Td(line[0]), html.Td(line[1]))
-
-    # row1 = html.Tr([html.Td("Arthur"), html.Td("Dent")])
-    # row2 = html.Tr([html.Td("Ford"), html.Td("Prefect")])
-    # row3 = html.Tr([html.Td("Zaphod"), html.Td("Beeblebrox")])
-    # row4 = html.Tr([html.Td("Trillian"), html.Td("Astra")])
-    #
 
     table_body = [html.Tbody(row_list)]
 
     table = dbc.Table(table_header + table_body, bordered=False)
-    #######
 
-    pred_pric_tab = dash_table.DataTable(
-        data=new_data.to_dict('records'),
-        columns=[{"name": i, "id": i} for i in new_data.columns],
-        style_cell={'textAlign': 'center'},
-        style_header={
-            'backgroundColor': 'rgba(0,0,0,0.1)',
-            'color': 'white'
-        },
-        style_data={
-            'backgroundColor': 'rgba(0,0,0,0)',
-            'color': 'white'
-        },
-        id='tbl'
-    )
     return table
 
 

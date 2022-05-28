@@ -47,7 +47,7 @@ sidebar_bottom = html.Div([
     html.H5('by Group U', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080'}),
     html.H5('Beatriz Ferreira | Beatriz Peres | Diogo Marques | Miriam Hadidi Pereira'
             , style={'text-align': 'center', 'font-size': '8pt', 'color': '#808080'}),
-    html.H5('NOVA IMS', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080', 'font-weight': 'bold'})
+    html.Img(src='assets/nova_ims.png', style={'width': '64px', 'height': '64px','margin-top':'30px'}, className='mx-auto d-block')
 
 ],style=SIDEBAR_BOTTOM)
 
