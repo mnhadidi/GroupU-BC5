@@ -2,20 +2,23 @@ import requests
 import plotly.graph_objs as go
 import json
 
+from project_variables import mkt_over_info
+
 # function for API call
 def get_top_ten_API_call():
-    api_key = '{d4462bd4925c7c2d3d2adad9221d5e897dd7178ddac5a0558f76c978df7bd8da}'
-    resp = requests.get(f'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD&api_key={api_key}')
+    resp = requests.get(mkt_over_info['api_link_top_ten'] + mkt_over_info['api_key'])
 
-    if resp['Response']=='Error':
-        resp = resp.json()
-    else:
-        f = open('./data/crypto_data.json')
+    if resp['Response'] == 'Error':
+        print('get_top_ten_API_call error out on API call')
+        f = open('data/crypto_data_backup.json')
         resp = json.load(f)
-    # get json from query
+    else:
+        resp = resp.json()
 
+    # get json from query
     return resp
 
+# function to create bar chart for top ten market cap coins
 def create_top_ten_coins_chart(resp):
     coin_name = []
     coin_cap = []
