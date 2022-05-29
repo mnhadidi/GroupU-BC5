@@ -55,7 +55,7 @@ market_over = html.Div([
                     dbc.Container([
                         html.H2('Crypto vs Stock Simulation'),
                         html.P('If you had invested $1000 in Crypto or Stocks one year ago...',
-                                   style={'color': '#ffffff'}),
+                                   style={'color': '#ffffff', 'size':'16px'}),
                         dbc.Row([
                             dbc.Col(dcc.Graph(figure=simulation_plot), width=9),
                             dbc.Col(
