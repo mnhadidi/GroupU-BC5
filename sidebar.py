@@ -34,7 +34,7 @@ sidebar_top = html.Div([
         #     ], style={'display': 'flex', 'justify-content': 'center', 'margin-bottom':'20px'}),
 
         html.Img(src='assets/logo-blue-alt.png',
-                 style={'width': '100%', 'height': 'auto', 'margin-bottom':'20px'},
+                 style={'width': '100%', 'height': 'auto', 'margin-bottom':'50px'},
                  ),
         # html.H2("MarketDash", style={"color":project_colors['white'],"padding-bottom":'2rem','text-align':'center'}),
         dbc.Nav(
