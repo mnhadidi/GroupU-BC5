@@ -62,7 +62,7 @@ ind_coins_layout = html.Div([
                 dbc.Col(currency_dropdown, width=5),
                 dbc.Col(
                     html.Div([
-                        html.H5(date, id='date', style={'text-align': 'right',
+                        html.H6(date, id='date', style={'text-align': 'right',
                                                         'padding-right': '16px',
                                                         'color': 'white'}),
                         button_group
