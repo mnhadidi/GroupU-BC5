@@ -27,10 +27,15 @@ SIDEBAR_BOTTOM = {
 }
 
 sidebar_top = html.Div([
-        html.H2("CryptoDash", style={"color":project_colors['white'],"padding-bottom":'2rem'}),
+        html.Div([
+            html.Img(src='assets/logo-blue-alt.png',
+                     style={'width': 'auto','height': '12rem','max-height':'15vh', 'margin':'0 auto 2rem auto'})
+        ], style={'display': 'flex', 'justify-content': 'center'}),
+
+
         dbc.Nav(
             [
-                dbc.NavLink("Crypto Insights", href="/", active="exact"),
+                dbc.NavLink("Asset Insights", href="/", active="exact"),
                 dbc.NavLink("Market Overview", href="/market", active="exact"),
                 html.Hr(),
                 dbc.NavLink("Github", href="https://github.com/mnhadidi/GroupU-BC5", target='_blank'),
@@ -43,12 +48,16 @@ sidebar_top = html.Div([
 )
 
 sidebar_bottom = html.Div([
-    html.H5('made with 🧡 and 🍕', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080'}),
-    html.H5('by Group U', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080'}),
-    html.H5('Beatriz Ferreira | Beatriz Peres | Diogo Marques | Miriam Hadidi Pereira'
-            , style={'text-align': 'center', 'font-size': '8pt', 'color': '#808080'}),
-    html.H5('NOVA IMS', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080', 'font-weight': 'bold'})
 
+    html.P('Group U', style={'text-align': 'left', 'color': 'rgba(255,255,255,0.8)', 'font-weight':'bold'}),
+    html.P( ['Beatriz Ferreira', html.Br(), 'Beatriz Peres', html.Br(),
+             'Diogo Marques', html.Br(), 'Miriam Hadidi Pereira']
+            , style={'text-align': 'left', 'color': 'rgba(255,255,255,0.7)', 'margin-bottom':'15px'}),
+    html.Div([
+        html.Img(src='assets/nova_ims.png',
+             style={'width': 'auto','height': '6rem','max-height':'10rem'},
+             )
+    ])
 ],style=SIDEBAR_BOTTOM)
 
 sidebar = html.Div([

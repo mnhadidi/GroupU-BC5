@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import dash
 from dash import dcc
 from dash import html
@@ -6,13 +8,13 @@ from pandas import to_datetime
 from yfinance import download
 from dash.dependencies import Input, Output
 
-
 # import internal project libraries
-from project_functions import candlestick_fig_create, run_linear_regression, create_pred_plot,create_kpi_div,get_pred_pric_tab
-from project_variables import coin_dict,project_colors
-from project_variables import start_info as si
-from ind_coins_layout import ind_coins_layout
+from asset_ins_func import candlestick_fig_create, run_linear_regression
+from asset_ins_func import create_pred_plot, create_kpi_div, get_pred_pric_tab_v2
+from project_variables import project_colors, ticker_df, timeframe_tranf
+from asset_insight_layout import ind_coins_layout
 from sidebar import sidebar
+from market_over import market_over
 
 # setup dash app and heroku server info
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
@@ -20,20 +22,17 @@ app.title = 'CryptoDash'
 server = app.server
 
 # get content
-content = html.Div(ind_coins_layout, id="page-content")
+content = html.Div(children=[ind_coins_layout], id="page-content")
+# content_market_over = html.Div(market_over, id='market_over')
 
 # gets sidebar from sidebar.py
-app.layout = html.Div([dcc.Location(id="url"), sidebar,content],style={"background-color": project_colors['background']})
+app.layout = html.Div([dcc.Location(id="url"), sidebar, content],
+                      style={"background-color": project_colors['background']})
 
 
 ####################
 # CALLBACKS
 ####################
-
-
-############################################################################################################################################
-# this sidebar doesn't look correct, double check before continuing
-############################################################################################################################################
 
 # sidebar callback
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
@@ -41,7 +40,7 @@ def render_page_content(pathname):
     if pathname == "/":
         return content
     elif pathname == "/market":
-        return html.P("This is the content of page 1. Yay!")
+        return html.Div(market_over, id='market_over')
     # If the user tries to reach a different page, return a 404 message
     return dbc.Jumbotron(
         [
@@ -51,8 +50,6 @@ def render_page_content(pathname):
         ]
     )
 
-############################################################################################################################################
-############################################################################################################################################
 
 # app callback
 @app.callback(
@@ -65,33 +62,36 @@ def render_page_content(pathname):
      Input(component_id="data_radio", component_property="value")]
 )
 def update_dashboard(coin_dropdown, data_radio):
+    asset_picked = ticker_df.loc[ticker_df['text'] == coin_dropdown, 'yf'].iloc[0]
+
     # update data
-    coin_df = download(tickers=(coin_dropdown + '-USD'), period=data_radio, interval='1d')
-    prediction_coin_df = download(tickers=(coin_dropdown + '-USD'), period='1y', interval='1d')
-
+    coin_df = download(tickers=asset_picked, period=data_radio, interval='1d')
     # get date last updated
-    date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strftime("%b %d %Y, %H:%M")
-
-    # update prediction
-    coin_df_new, prediction, future_set, coin_df_for_plot = run_linear_regression(prediction_coin_df, coin_df)
-
-    # update graphs
-    candlestick_fig = candlestick_fig_create(coin_df)
-    prediction_fig = create_pred_plot(coin_df_for_plot, prediction, future_set, data_radio)
-
-    pred_table = get_pred_pric_tab(future_set)
-
+    date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strftime("%b %d %Y")
     # update kpis div
     kpi_div = create_kpi_div(data_radio, coin_df)
+    # update candlestick
+    candlestick_fig = candlestick_fig_create(coin_df)
+    # number of days
+    days = timeframe_tranf[data_radio]
 
-    return candlestick_fig, date, prediction_fig, kpi_div, pred_table
+    if data_radio in ['5d','1mo']:
+        data_for_prediction = download(tickers=asset_picked, period='1y', interval='1d')
+    else:
+        data_for_prediction = coin_df
 
-# coin image call back
-@app.callback(Output(component_id='symbol', component_property='src')
-    ,Input(component_id='coin_dropdown', component_property='value'))
-def update_coin_image(coin_dropdown):
-    new_src = "/assets/" + coin_dropdown + '.png'
-    return new_src
+    # update prediction
+    orig_coin_df, prediction, dates = run_linear_regression(data_for_prediction)
+    # update prediction graph
+    prediction_fig = create_pred_plot(orig_coin_df.tail(days), prediction, dates)
+    # update prediction table
+    pred_pric_tab = get_pred_pric_tab_v2(prediction, dates)
 
+
+
+    return candlestick_fig, date, prediction_fig, kpi_div, pred_pric_tab
+
+
+# deploy app
 if __name__ == '__main__':
     app.run_server(debug=True)
