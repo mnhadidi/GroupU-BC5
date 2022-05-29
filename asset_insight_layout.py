@@ -1,17 +1,14 @@
-# import dash
-from dash import dcc
+# import external libraries
 from dash import html
 import dash_bootstrap_components as dbc
 from pandas import to_datetime
 from yfinance import download
-# from dash.dependencies import Input, Output
-# from sidebar import sidebar
 
 # import internal project libraries
-from ind_coin_func import candlestick_fig_create, run_linear_regression, create_pred_plot
-from ind_coin_func import func_currency_dropdown, create_kpi_div, get_pred_pric_tab, func_button_group
-from project_variables import CONTENT_STYLE, coin_dict_v2
-from project_variables import start_info as si
+from asset_ins_func import candlestick_fig_create, run_linear_regression, create_pred_plot
+from asset_ins_func import func_currency_dropdown, create_kpi_div, get_pred_pric_tab, func_button_group
+from project_variables import CONTENT_STYLE,project_colors
+from project_variables import start_info as si, ticker_df
 
 
 ####################
@@ -19,20 +16,20 @@ from project_variables import start_info as si
 ####################
 
 # initializing coin
-coin = si['coin']
+asset = si['asset']
 
 # initializing coin df
-coin_df = download(tickers=(coin + '-USD'), period=si['time'], interval=si['interval'])
+coin_df = download(tickers=(asset), period=si['time'], interval=si['interval'])
 
 # get date last updated
-date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strftime("%b %d %Y, %H:%M")
+date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strftime("%b %d %Y")
 
 ####################
 # VISUALS
 ####################
 
 # create currency dropdown
-currency_dropdown = func_currency_dropdown(coin_dict_v2, coin)
+currency_dropdown = func_currency_dropdown(ticker_df['text'],ticker_df.loc[ticker_df['yf'] == asset, 'Name'].iloc[0])
 
 # create button group for date period
 button_group = func_button_group()
@@ -58,10 +55,14 @@ pred_pric_tab = get_pred_pric_tab(prediction, dates)
 ind_coins_layout = html.Div([
 
     dbc.Container([
+        dbc.Container([
+            html.H1('Asset Insights', style={'color':project_colors['white'],'font-weight': 'bold'})
+        ], style={'padding-top': '20px', 'padding-bottom': '20px'}),
+
+
         html.Div([
             dbc.Row([
-                dbc.Col(html.Img(src='', id='symbol', style={'width': '64px', 'height': '64px'}), width=1),
-                dbc.Col(currency_dropdown, width=4),
+                dbc.Col(currency_dropdown, width=5),
                 dbc.Col(
                     html.Div([
                         html.H5(date, id='date', style={'text-align': 'right',

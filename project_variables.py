@@ -24,21 +24,43 @@ CONTENT_STYLE = {
 
 
 ####################
-# crypto variables
+# asset insight variables
 ####################
-# information to initialize individual coin layout
+# information to initialize asset insight layout
 start_info = {
-    # make sure the coin name is one of the 'values' of coin_dict
-    'coin': 'ADA',
-    # this is the selected initial timeframe for the crypto insights dash
+    # asset ticker
+    'asset': 'BTC-USD',
+    # this is the selected initial timeframe for the insights dash
     'time': '1y',
     # this is the time between data gathered from yfinance, started with 1d
     'interval': '1d'
 }
 
-# get all coins
-coins_df = pd.read_csv("data/coin-full-list.csv")
-coin_dict_v2 = coins_df.set_index('Coin')['Name'].to_dict()
+# get all tickers
+def cleanup_ticker_info():
+    stock_list = pd.read_csv("C:/Users/Mimi/PycharmProjects/cryptodash-groupu/data/stock-full-list.csv")
+    coin_list = pd.read_csv("C:/Users/Mimi/PycharmProjects/cryptodash-groupu/data/coin-full-list.csv")
+
+    #add stock to type
+    stock_list['type'] = 'stock'
+    # add text for dropdown
+    stock_list['text'] = stock_list.apply(lambda x: '[ST] ' + x['Name'] + ' (' + x['Symbol'] + ')', axis=1)
+    stock_list['yf'] = stock_list.apply(lambda x: x['Symbol'], axis=1)
+    # add coin to type
+    coin_list['type'] = 'coin'
+    # rename column to match stock csv
+    coin_list = coin_list.rename(columns={"Coin": "Symbol"})
+    # add text for dropdown
+    coin_list['text'] = coin_list.apply(lambda x: x['Name'], axis=1)
+    coin_list['yf'] = coin_list.apply(lambda x: x['Symbol'] + '-USD', axis=1)
+    # join the two tables
+    # full_coin_stock_list = stock_list.append(coin_list, ignore_index=True)
+    full_coin_stock_list = pd.concat([stock_list, coin_list], axis=0, ignore_index=True)
+    full_coin_stock_list = full_coin_stock_list.sort_values(by=['Symbol'], ignore_index=True)
+
+    return full_coin_stock_list
+
+ticker_df = cleanup_ticker_info()
 
 # get available timeframes for yfinance
 timeframe_tranf = {
@@ -55,7 +77,7 @@ timeframe_full_name = {
     'max': 'All time'
 }
 
-# these are the options for the button group on the crypto insights
+# these are the options for the button group on the asset insights
 # make sure it matches timeframe_full_name options
 time_frame_options = [
     {"label": "5 days", "value": '5d'},

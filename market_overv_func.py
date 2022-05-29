@@ -8,7 +8,7 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 from datetime import datetime
 
-from project_variables import mkt_over_info, project_colors, coin_dict_v2
+from project_variables import mkt_over_info, project_colors, ticker_df, ticker_df
 
 ##########################
 # API CALL DEF
@@ -176,7 +176,7 @@ def stock_sim_ind(df_plot):
 # TOP TEN DATA TABLE DATA
 # used on market_over
 ##########################
-def  get_top_ten_data(resp):
+def get_top_ten_coins_data(resp):
     coin = []
     coin_name = []
     last_close_price = []
@@ -189,7 +189,9 @@ def  get_top_ten_data(resp):
     for line in resp['Data']:
         coin.append(line['CoinInfo']['Name'])
         coin_name.append(line['CoinInfo']['FullName'])
-        long_form = coin_dict_v2[line['CoinInfo']['Name']]
+        long_form = ticker_df.loc[ticker_df['Symbol'] == line['CoinInfo']['Name'], 'Name'].iloc[0]
+
+        # long_form = ticker_df['yf'][line['CoinInfo']['Name']]
         url_begin = 'https://cryptologos.cc/logos/'
         url_end = '-logo.png?v=022'
         long_form = long_form.lower().replace("(", "").replace(")", "").replace(" ", "-")

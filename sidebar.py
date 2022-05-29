@@ -27,10 +27,10 @@ SIDEBAR_BOTTOM = {
 }
 
 sidebar_top = html.Div([
-        html.H2("CryptoDash", style={"color":project_colors['white'],"padding-bottom":'2rem'}),
+        html.H2("MarketDash", style={"color":project_colors['white'],"padding-bottom":'2rem','text-align':'center'}),
         dbc.Nav(
             [
-                dbc.NavLink("Crypto Insights", href="/", active="exact"),
+                dbc.NavLink("Asset Insights", href="/", active="exact"),
                 dbc.NavLink("Market Overview", href="/market", active="exact"),
                 html.Hr(),
                 dbc.NavLink("Github", href="https://github.com/mnhadidi/GroupU-BC5", target='_blank'),

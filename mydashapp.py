@@ -5,14 +5,12 @@ import dash_bootstrap_components as dbc
 from pandas import to_datetime
 from yfinance import download
 from dash.dependencies import Input, Output
-import requests
 
 # import internal project libraries
-from ind_coin_func import candlestick_fig_create, run_linear_regression, create_pred_plot, create_kpi_div, \
-    get_pred_pric_tab
-from project_variables import project_colors, coin_dict_v2
-from project_variables import start_info as si
-from ind_coins_layout import ind_coins_layout
+from asset_ins_func import candlestick_fig_create, run_linear_regression
+from asset_ins_func import get_pred_pric_tab, create_pred_plot, create_kpi_div
+from project_variables import project_colors, ticker_df
+from asset_insight_layout import ind_coins_layout
 from sidebar import sidebar
 from market_over import market_over
 
@@ -62,12 +60,13 @@ def render_page_content(pathname):
      Input(component_id="data_radio", component_property="value")]
 )
 def update_dashboard(coin_dropdown, data_radio):
+    asset_picked = ticker_df.loc[ticker_df['text'] == coin_dropdown, 'yf'].iloc[0]
+
     # update data
-    coin_df = download(tickers=(coin_dropdown + '-USD'), period=data_radio, interval='1d')
-    prediction_coin_df = download(tickers=(coin_dropdown + '-USD'), period='1y', interval='1d')
+    coin_df = download(tickers=asset_picked, period=data_radio, interval='1d')
 
     # get date last updated
-    date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strftime("%b %d %Y, %H:%M")
+    date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strftime("%b %d %Y")
 
     # update prediction
     orig_coin_df, prediction, dates = run_linear_regression(coin_df)
@@ -84,22 +83,6 @@ def update_dashboard(coin_dropdown, data_radio):
     return candlestick_fig, date, prediction_fig, kpi_div, pred_pric_tab
 
 
-# coin image call back
-@app.callback(Output(component_id='symbol', component_property='src')
-    , Input(component_id='coin_dropdown', component_property='value'))
-def update_coin_image(coin_dropdown):
-    long_form = coin_dict_v2[coin_dropdown]
-    url_begin = 'https://cryptologos.cc/logos/'
-    url_end = '-logo.png?v=022'
-    long_form = long_form.lower().replace("(", "").replace(")", "").replace(" ", "-")
-    full_url = url_begin + long_form + url_end
-
-    r = requests.get(full_url)
-    if 200 <= r.status_code <= 299:
-        return full_url
-    else:
-        return '/assets/other.png'
-
-
+# deploy app
 if __name__ == '__main__':
     app.run_server(debug=True)
