@@ -105,14 +105,8 @@ def run_linear_regression(orig_coin_df):
 # used on asset_insight_layout
 ##########################
 def create_pred_plot(orig_coin_df, prediction, dates):
-
-
-
-
     prediction_fig = go.Figure()
     # Create and style traces
-
-
     # close price line
     prediction_fig = prediction_fig.add_trace(
         go.Scatter(x=orig_coin_df['Date'], y=orig_coin_df["Close"], name='Historical',
