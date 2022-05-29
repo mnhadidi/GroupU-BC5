@@ -13,3 +13,24 @@
   border-bottom-left-radius: 0;
   margin-left: -1px;
 }
+
+.btn-outline-primary {
+  outline-color: cornflowerblue;
+  border-color: cornflowerblue;
+  color: cornflowerblue;
+}
+
+.btn .btn-outline-primary .active {
+  background: cornflowerblue;
+  outline-color: cornflowerblue;
+  border-color: cornflowerblue;
+  color: white !important;
+
+}
+
+.btn-check:active+.btn-outline-primary, .btn-check:checked+.btn-outline-primary, .btn-outline-primary.active, .btn-outline-primary.dropdown-toggle.show, .btn-outline-primary:active {
+  background: cornflowerblue;
+  outline-color: cornflowerblue;
+  border-color: cornflowerblue;
+  color: white !important;
+}

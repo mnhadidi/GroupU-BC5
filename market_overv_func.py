@@ -8,8 +8,9 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 from datetime import datetime
 import numpy as np
+from plotly.subplots import make_subplots
 
-from project_variables import mkt_over_info, project_colors, ticker_df, ticker_df, H5_STYLE
+from project_variables import mkt_over_info, project_colors, ticker_df, CONTAINER_STYLE
 
 ##########################
 # API CALL DEF
@@ -251,54 +252,7 @@ def get_top_ten_coins_data(resp):
 # used on market_over
 ##########################
 
-# def get_top_coins_tbl(df_table):
-#     coin_image = df_table['CoinImage']
-#     coin_name = df_table['CoinName']
-#     last_close_price = df_table['LastClosePrice']
-#     one_day_change = df_table['OneDayPrcChg']
-#     bear_bull = df_table['BearBull']
-#
-#
-#     last_close_price_form = ['${:,.2f}'.format(member) for member in last_close_price]
-#
-#     header = [
-#         html.H2('Bear vs Bull'),
-#         dbc.Row([
-#             dbc.Col(html.P('', style={'color': '#ffffff'}), width=1),
-#             dbc.Col(html.P('Coin', style={'color': project_colors['pink'],'font-weight': 'bold'}), width=4),
-#             dbc.Col(html.P('Last Close', style={'color': project_colors['pink'],'font-weight': 'bold','text-align':'right'}), width=4),
-#             dbc.Col(html.P('', style={'color': '#ffffff'}), width=2)
-#         ])
-#     ]
-#
-#     rows = []
-#
-#     for i in range(0, 10):
-#         row = dbc.Row([
-#             dbc.Col(html.Img(src=coin_image[i],style={'width': '20px', 'height': '20px'}),
-#                     width= 1),
-#             dbc.Col(coin_name[i],
-#                     style={'color':'#ffffff'},
-#                     width= 4),
-#             dbc.Col(last_close_price_form[i],
-#                     style={'color':'#ffffff','text-align':'right'},
-#                     width= 5),
-#             dbc.Col(html.Img(src='assets/' + bear_bull[i] + '.png', style={'width': '20px', 'height': '20px'}),
-#                     width= 2)
-#         ])
-#
-#         rows.append(row)
-#
-#     header.extend(rows)
-#
-#     table = dbc.Container(header,
-#                           style={"background-color": project_colors['dark-blue'],
-#                                          'padding-top':'10px','padding-bottom':'10px'})
-#
-#     return table
-
-
-def get_top_coins_tbl_v2(df_table):
+def get_top_coins_tbl(df_table):
     coin_image = df_table['CoinImage']
     coin_name = df_table['CoinName']
     last_close_price = df_table['LastClosePrice']
@@ -445,3 +399,101 @@ def get_fear_greed_gauge():
     fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
 
     return fig
+
+
+##########################
+# WORLD STOCK INDICES LINE CHARTS
+# used on market_over
+##########################
+
+def get_data_indices():
+    SP500 = yfinance.download(tickers=('^GSPC'), period='1y', interval='1d').reset_index()
+    FTSE = yfinance.download(tickers=('^FTSE'), period='1y', interval='1d').reset_index()
+    IBOVESPA = yfinance.download(tickers=('^BVSP'), period='1y', interval='1d').reset_index()
+    Nikkei225 = yfinance.download(tickers=('^N225'), period='1y', interval='1d').reset_index()
+    SSEComposite = yfinance.download(tickers=('000001.SS'), period='1y', interval='1d').reset_index()
+
+    return SP500, FTSE, IBOVESPA, Nikkei225, SSEComposite
+
+def get_index_plot(df, color):
+    #### CREATE CHART
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df['Date'],
+                             y=df['Close'],
+                             mode='lines',
+                             line_color=color))
+
+    fig.update_layout(
+        margin={'t': 20, 'l': 20, 'r': 20, 'b': 20},
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        height=150
+    )
+
+    fig.update_layout(title_font_color='rgba(255,255,255,0.2)', font_color='rgba(255,255,255,0.2)')
+    fig.update_xaxes(showgrid=False, visible=False)
+    fig.update_yaxes(showgrid=False, visible=False)
+
+    return fig
+
+
+def get_index_row(exchange_name,currency, df, color):
+
+    last_price = df['Close'].iloc[-1]
+    day_change_pct = (last_price - df['Close'].iloc[-2]) / df['Close'].iloc[-2]
+
+    last_price_str = '{:,.0f}'.format(last_price)
+    day_change_pct_str = '{:+,.3f}%'.format(day_change_pct)
+
+    if day_change_pct >= 0:
+        color_change=project_colors['green']
+    else:
+        color_change = project_colors['red']
+
+    content_list = [
+        dbc.Row([
+            dbc.Col([html.H4(exchange_name, style={'color': 'white'})]),
+            dbc.Col([html.P(children=['Currency: ' + currency], style={'color': 'rgba(255,255,255,0.5', 'text-align': 'right'})]),
+
+        ]),
+        dbc.Row([
+            dbc.Col([html.P(last_price_str, style={'color': project_colors['bright-blue'],'font-size':30, 'margin-bottom':'2px'})]),
+            dbc.Col([html.P(day_change_pct_str, style={'color':color_change,'text-align':'right','font-size':30, 'margin-bottom':'2px'})]),
+        ], style={'margin-bottom':0}),
+
+        dbc.Row([
+            dbc.Col([html.P(children=['Last price'], style={'color': 'rgba(255,255,255,0.5'})]),
+            dbc.Col([html.P(children=['Day change'], style={'color': 'rgba(255,255,255,0.5', 'text-align': 'right'})]),
+        ], style={'margin-top':'2px'}),
+
+        dcc.Graph(figure=get_index_plot(df, color))
+    ]
+
+    return content_list
+
+
+def get_row_of_index_plots():
+    SP500, FTSE, IBOVESPA, Nikkei225, SSEComposite = get_data_indices()
+
+
+    return_row = dbc.Container([
+        dbc.Row([
+            dbc.Col(get_index_row('S&P500', 'USD', SP500, project_colors['bright-blue']),
+                    style={'padding':'20px 20px 0 20px','margin-right':'30px', "background-color": project_colors['dark-blue']}),
+            dbc.Col(get_index_row('FTSE100', 'GBP', FTSE, project_colors['bright-blue']),
+                    style={'padding':'20px 20px 0 20px','margin-right':'30px',"background-color": project_colors['dark-blue']}),
+            dbc.Col(get_index_row('IBOVESPA', 'BRL', IBOVESPA, project_colors['bright-blue']),
+                    style={'padding':'20px 20px 0 20px','margin-right':'30px',"background-color": project_colors['dark-blue']}),
+            dbc.Col(get_index_row('SSEComp.', 'CNY', SSEComposite, project_colors['bright-blue']),
+                    style={'padding':'20px 20px 0 20px',"background-color": project_colors['dark-blue']}),
+
+        ])
+    ], style=CONTAINER_STYLE)
+
+    return return_row

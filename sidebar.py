@@ -27,7 +27,16 @@ SIDEBAR_BOTTOM = {
 }
 
 sidebar_top = html.Div([
-        html.H2("MarketDash", style={"color":project_colors['white'],"padding-bottom":'2rem','text-align':'center'}),
+        # html.Div([
+        #         html.Img(src='assets/logo-blue.png',
+        #              style={'width': '60px', 'height': '60px'},
+        #              )
+        #     ], style={'display': 'flex', 'justify-content': 'center', 'margin-bottom':'20px'}),
+
+        html.Img(src='assets/logo-blue-alt.png',
+                 style={'width': '100%', 'height': 'auto', 'margin-bottom':'20px'},
+                 ),
+        # html.H2("MarketDash", style={"color":project_colors['white'],"padding-bottom":'2rem','text-align':'center'}),
         dbc.Nav(
             [
                 dbc.NavLink("Asset Insights", href="/", active="exact"),
@@ -43,10 +52,10 @@ sidebar_top = html.Div([
 )
 
 sidebar_bottom = html.Div([
-    html.H5('made with 🧡 and 🍕', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080'}),
-    html.H5('by Group U', style={'text-align': 'center', 'font-size': '12pt', 'color': '#808080'}),
+    html.H5('made with 🧡 and 🍕', style={'text-align': 'center', 'font-size': '12pt', 'color': 'rgba(255,255,255,0.8)'}),
+    html.H5('by Group U', style={'text-align': 'center', 'font-size': '12pt', 'color': 'rgba(255,255,255,0.8)'}),
     html.H5('Beatriz Ferreira | Beatriz Peres | Diogo Marques | Miriam Hadidi Pereira'
-            , style={'text-align': 'center', 'font-size': '8pt', 'color': '#808080', 'margin-bottom':'30px'}),
+            , style={'text-align': 'center', 'font-size': '8pt', 'color': 'rgba(255,255,255,0.7)', 'margin-bottom':'30px'}),
     html.Div([
         html.Img(src='assets/nova_ims.png',
              style={'width': '64px', 'height': '64px'},

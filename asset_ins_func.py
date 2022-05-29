@@ -10,7 +10,7 @@ import datetime as dt
 from typing import Callable
 
 # import internal project libraries
-from project_variables import timeframe_tranf, timeframe_full_name
+from project_variables import  timeframe_full_name
 from project_variables import project_colors, time_frame_options, start_info
 
 
@@ -89,11 +89,12 @@ def create_pred_plot(orig_coin_df, prediction, dates):
     prediction_fig = go.Figure()
     # Create and style traces
     prediction_fig = prediction_fig.add_trace(
-        go.Scatter(x=orig_coin_df['Date'][-180:], y=orig_coin_df["Close"][-180:], name='Historical',
-                   line=dict(color=project_colors['pink'])))
+        go.Scatter(x=orig_coin_df['Date'], y=orig_coin_df["Close"], name='Historical',
+                   line=dict(color=project_colors['pink']), mode='lines'))
     prediction_fig = prediction_fig.add_trace(
         go.Scatter(x=dates, y=prediction, name='Prediction',
-                   line=dict(color=project_colors['gold'])))
+                   line=dict(color=project_colors['gold']),
+                   mode='lines'))
 
     # Edit the layout
     prediction_fig = prediction_fig.update_layout(xaxis_title='Date',

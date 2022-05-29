@@ -27,11 +27,6 @@ CONTAINER_STYLE = {
     "padding": "20px 0",
 }
 
-H5_STYLE = {
-    "color": project_colors['bright-blue'],
-}
-
-
 ####################
 # asset insight variables
 ####################
