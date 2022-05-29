@@ -3,9 +3,9 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 
 # import internal project libraries
-from project_variables import CONTENT_STYLE, project_colors
+from project_variables import CONTENT_STYLE, project_colors, CONTAINER_STYLE
 from market_overv_func import get_top_ten_API_call, create_top_ten_coins_chart, get_simulation_plot
-from market_overv_func import crypto_sim_ind, stock_sim_ind,get_top_ten_coins_data
+from market_overv_func import crypto_sim_ind, stock_sim_ind,get_top_ten_coins_data, get_fear_greed_gauge
 from market_overv_func import get_top_coins_tbl, get_stories, get_stories_card,get_top_coins_tbl_v2
 
 ####################
@@ -24,6 +24,7 @@ df_table = get_top_ten_coins_data(resp)
 top_coin_table = get_top_coins_tbl_v2(df_table)
 response_stories = get_stories()
 stories_card = get_stories_card(response_stories)
+fear_and_greed_gauge = get_fear_greed_gauge()
 
 
 ####################
@@ -36,32 +37,13 @@ market_over = html.Div([
         # first row with title
         dbc.Container([
             html.H1('Market Overview', style={'color':project_colors['white'],'font-weight': 'bold'})
-        ], style={'padding-top': '20px', 'padding-bottom': '20px'}),
-
-
-        # second row with top 10 crypto bar chart and bull vs bear table
-        dbc.Container([
-            dbc.Row([
-                dbc.Col(
-                    html.Div([
-                        html.H2('Top 10 Crypto Market Cap'),
-                        dcc.Graph(figure=top_ten_coin_mkt_cap)
-                    ]), width=7, style={'padding-left':0}),
-
-                dbc.Col(
-                    dbc.Container([
-                        html.H2('Bull vs Bear'),
-                        top_coin_table
-                        ]),
-                    width=5)
-                ], style={'padding-top': '20px', 'padding-bottom': '20px'}
-            )]),
+        ], style=CONTAINER_STYLE),
 
         # third row with crypto vs stock simulation
         dbc.Container([
             dbc.Row([
                 dbc.Col(
-                    html.Div([
+                    dbc.Container([
                         html.H2('Crypto vs Stock Simulation'),
                         html.P('If you had invested $1000 in Crypto or Stocks one year ago...',
                                    style={'color': '#ffffff'}),
@@ -84,18 +66,52 @@ market_over = html.Div([
                                 ]),
                                 width=3)
                         ], className='align-items-center')
-                    ]), width=12),
+                    ], style=CONTAINER_STYLE), width=12),
 
-                ],style={'padding-top': '20px', 'padding-bottom': '20px'}
+                ]
             )
-        ]),
+        ], style=CONTAINER_STYLE),
+
+        # second row with top 10 crypto bar chart and bull vs bear table
+        dbc.Container([
+            dbc.Row([
+                dbc.Col(
+                    dbc.Container([
+                        html.H2('Top 10 Crypto Market Cap'),
+                        dcc.Graph(figure=top_ten_coin_mkt_cap)
+                    ], style=CONTAINER_STYLE),
+                    width=8),
+
+                dbc.Col(
+                    dbc.Container([
+                        html.H2('Bull vs Bear'),
+                        top_coin_table
+                    ], style=CONTAINER_STYLE),
+                    width=4)
+                ]
+            )], style=CONTAINER_STYLE),
+
+
 
         # fourth row with latest crypto stories
         dbc.Container([
-            html.H2('Latest Stories on Crypto', style={'padding-top': '20px', 'padding-bottom': '20px'}),
+            dbc.Row([
 
-            stories_card
-        ])
+                dbc.Col(
+                    dbc.Container([
+                        html.H2('Fear and Greed Index', style={'margin-bottom':'15px'}),
+                        dcc.Graph(figure=fear_and_greed_gauge),
+                    ], style=CONTAINER_STYLE), width=5
+                ),
+
+                dbc.Col(
+                    dbc.Container([
+                        html.H2('Latest Stories on Crypto', style={'margin-bottom':'15px'}),
+                        stories_card
+                    ], style=CONTAINER_STYLE), width=7
+                ),
+            ])
+        ], style=CONTAINER_STYLE)
 
 
     ]),

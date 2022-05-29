@@ -22,6 +22,10 @@ CONTENT_STYLE = {
     "padding": "1rem 1rem",
 }
 
+CONTAINER_STYLE = {
+    "padding": "20px 0",
+}
+
 
 ####################
 # asset insight variables

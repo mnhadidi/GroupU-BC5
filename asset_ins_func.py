@@ -19,13 +19,19 @@ from project_variables import project_colors, time_frame_options, start_info
 # used on ind_coins_layout
 ##########################
 def candlestick_fig_create(coin_df):
-    candlestick_fig = go.Figure(data=[go.Candlestick(x=coin_df.index.values,
-                                                     open=coin_df["Open"],
-                                                     high=coin_df["High"],
-                                                     low=coin_df["Low"],
-                                                     close=coin_df["Close"],
-                                                     increasing_line_color=project_colors['green'],
-                                                     decreasing_line_color=project_colors['red'])])
+    candlestick_fig = go.Figure(
+        data=[
+            go.Candlestick(
+                x=coin_df.index.values,
+                open=coin_df["Open"],
+                high=coin_df["High"],
+                low=coin_df["Low"],
+                close=coin_df["Close"],
+                increasing_line_color=project_colors['green'],
+                decreasing_line_color=project_colors['red']
+            )
+        ]
+    )
 
     # Edit the layout
     candlestick_fig.update_layout(xaxis_title='Date', yaxis_title='Price USD', plot_bgcolor='rgba(0,0,0,0)',

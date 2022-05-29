@@ -7,6 +7,7 @@ from dash import dash_table
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 from datetime import datetime
+import numpy as np
 
 from project_variables import mkt_over_info, project_colors, ticker_df, ticker_df
 
@@ -62,6 +63,8 @@ def create_top_ten_coins_chart(resp):
                       margin={'t': 20, 'l': 20, 'r': 30, 'b': 20}
                       )
 
+
+
     fig.update_traces(textposition='outside',cliponaxis=False)
     return fig
 
@@ -101,14 +104,18 @@ def get_simulation_plot():
 
     #### CREATE CHART
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=df_plot['Date'], y=df_plot['InvestCryptoVal'],
+    fig.add_trace(go.Scatter(x=df_plot['Date'],
+                             y=df_plot['InvestCryptoVal'],
                              mode='lines',
                              name='Crypto Index (CMC Crypto 200)'))
 
-    fig.add_trace(go.Scatter(x=df_plot['Date'], y=df_plot['InvestStockVal'],
+    fig.add_trace(go.Scatter(x=df_plot['Date'],
+                             y=df_plot['InvestStockVal'],
                              mode='lines',
                              name='Stock Index (S&P 500)'))
-    fig.add_hline(y=1000, opacity=0.5)
+
+    fig.add_hline(y=1000, opacity=1)
+
     fig.update_layout(
         margin={'t': 20, 'l': 20, 'r': 20, 'b': 20},
         legend=dict(
@@ -117,9 +124,13 @@ def get_simulation_plot():
             y=1.02,
             xanchor="right",
             x=1),
+
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
     )
+
+    fig.update_xaxes(gridcolor='rgba(255,255,255,0.7)')
+    fig.update_yaxes(gridcolor='rgba(255,255,255,0.7)')
 
     return fig, df_plot
 
@@ -249,7 +260,8 @@ def get_top_coins_tbl(df_table):
             dbc.Col(html.P('Coin', style={'color': project_colors['pink'],'font-weight': 'bold'}), width=4),
             dbc.Col(html.P('Last Close', style={'color': project_colors['pink'],'font-weight': 'bold','text-align':'right'}), width=4),
             dbc.Col(html.P('', style={'color': '#ffffff'}), width=2)
-        ])]
+        ])
+    ]
 
     rows = []
 
@@ -286,29 +298,30 @@ def get_top_coins_tbl_v2(df_table):
     last_close_price_form = ['${:,.2f}'.format(member) for member in last_close_price]
 
     table_header = [
-        html.Thead(html.Tr([html.Th("Coin"),
-                            html.Th("Coin",style={'color':'#ffffff'}),
-                            html.Th("Last Price",style={'color':'#ffffff'}),
-                            html.Th("Bear")])
-                   )
+        html.Tr([
+            html.Th(""),
+            html.Th("Coin",style={'color':'#ffffff'}),
+            html.Th("Last Price",style={'color':'#ffffff','text-align':'right'}),
+            html.Th("")
+        ])
     ]
 
     rows = []
 
     for i in range(0,10):
-        row = html.Tr([html.Td(html.Img(src=coin_image[i], style={'width': '20px', 'height': '20px'}), style={'width': '25px'}),
-                        html.Td(coin_name[i], style={'color': '#ffffff'}),
-                        html.Td(last_close_price_form[i], style={'color': '#ffffff'}),
-                        html.Td(
-                            html.Img(src='assets/' + bear_bull[i] + '.png', style={'width': '20px', 'height': '20px'})
-                        )
-                        ])
+
+        row = html.Tr([
+            html.Td(html.Img(src=coin_image[i], style={'width': '20px', 'height': '20px'}), style={'width': '25px'}),
+            html.Td(coin_name[i], style={'color': '#ffffff'}),
+            html.Td(last_close_price_form[i], style={'color': '#ffffff','text-align':'right'}),
+            html.Td(html.Img(src='assets/' + bear_bull[i] + '.png', style={'width': '20px', 'height': '20px'}))
+        ])
 
         rows.append(row)
 
     table_header.extend(rows)
 
-    table = dbc.Table([html.Tbody(table_header)], bordered=False)
+    table = dbc.Table([html.Tbody(table_header)], bordered=False, responsive=True, style={'border-bottom': '1px solid rgba(255,255,255,0.1)'})
 
     return table
 
@@ -331,8 +344,7 @@ def get_stories_card(response_stories):
             html.Div(html.H6('on: ' + datetime.utcfromtimestamp(story['published_on']).strftime('%Y-%m-%d %H:%M:%S')),
                      style={'float':'left','padding-left':'20px','padding-right':'20px'}),
             html.Div(dcc.Link("LINK", href=story['guid']))
-        ], style={'margin-left':0,'padding-left':0})
-
+        ], style={'margin-left':0,'padding-left':0,'padding-right':0})
 
         return news_story
 
@@ -346,9 +358,77 @@ def get_stories_card(response_stories):
         create_card(response_stories[3]),
         html.Hr(),
         create_card(response_stories[4])
-,
-    ], style={'padding-left':0,'margin-bottom':'50px','margin-left':0})
+
+    ], style={'margin-bottom':'50px','margin-left':0, 'padding-right':0, 'padding-left':0})
 
 
 
     return final_layout
+
+##########################
+# FEAR AND GREED INDEX
+# used on market_over
+##########################
+
+def get_fear_greed_gauge():
+    response = requests.get("https://api.alternative.me/fng/?limit=1")
+    response_json = response.json()
+    fear_greed_index = response_json['data'][0]['value']
+
+    plot_bgcolor = "rgba(0,0,0,0)"
+    quadrant_colors = [plot_bgcolor, '#009900', '#39e600', '#77ff33',
+                       '#ccff33', '#ffff00', '#ffcc00', '#ff9933', '#ff6600', '#ff0000']
+    quadrant_text = ["", "Extreme Greed", "", "", "", "", "", "", "", "Extreme Fear"]
+    n_quadrants = len(quadrant_colors) - 1
+
+    current_value = float(fear_greed_index)
+    min_value = 0
+    max_value = 100
+    hand_length = np.sqrt(2) / 4
+    hand_angle = np.pi * (1 - (max(min_value, min(max_value, current_value)) - min_value) / (max_value - min_value))
+
+    fig = go.Figure(
+        data=[
+            go.Pie(
+                values=[0.5] + (np.ones(n_quadrants) / 2 / n_quadrants).tolist(),
+                rotation=90,
+                hole=0.5,
+                marker_colors=quadrant_colors,
+                text=quadrant_text,
+                textinfo="text",
+                hoverinfo="skip",
+            ),
+        ],
+        layout=go.Layout(
+            showlegend=False,
+            margin=dict(b=0, t=10, l=10, r=10),
+            # width=450,
+            # height=450,
+            paper_bgcolor=plot_bgcolor,
+            annotations=[
+                go.layout.Annotation(
+                    text=f"<b>Fear & Greed Index</b><br>{current_value}",
+                    x=0.5, xanchor="center", xref="paper",
+                    y=0.25, yanchor="bottom", yref="paper",
+                    showarrow=False,
+                )
+            ],
+            shapes=[
+                go.layout.Shape(
+                    type="circle",
+                    x0=0.48, x1=0.52,
+                    y0=0.48, y1=0.52,
+                    fillcolor="#ffffff",
+                    line_color="#ffffff",
+                ),
+                go.layout.Shape(
+                    type="line",
+                    x0=0.5, x1=0.5 + hand_length * np.cos(hand_angle),
+                    y0=0.5, y1=0.5 + hand_length * np.sin(hand_angle),
+                    line=dict(color="#ffffff", width=4)
+                )
+            ]
+        )
+    )
+
+    return fig
