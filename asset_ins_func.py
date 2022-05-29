@@ -39,6 +39,9 @@ def candlestick_fig_create(coin_df):
     candlestick_fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
     candlestick_fig.update_layout(xaxis_rangeslider_visible=False, margin=dict(l=20, r=16, t=20, b=20))
 
+    candlestick_fig.update_xaxes(gridcolor='rgba(255,255,255,0.2)')
+    candlestick_fig.update_yaxes(gridcolor='rgba(255,255,255,0.2)')
+
     return candlestick_fig
 
 
@@ -101,6 +104,8 @@ def create_pred_plot(orig_coin_df, prediction, dates):
     prediction_fig.update_layout(xaxis_title='Date', yaxis_title='Price USD', plot_bgcolor='rgba(0,0,0,0)',
                                  paper_bgcolor='rgba(0,0,0,0)')
     prediction_fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
+    prediction_fig.update_xaxes(gridcolor='rgba(255,255,255,0.2)')
+    prediction_fig.update_yaxes(gridcolor='rgba(255,255,255,0.2)')
 
     prediction_fig = prediction_fig.update_layout(legend=dict(
         orientation="h",
@@ -125,8 +130,6 @@ def get_pred_pric_tab(prediction, dates):
     new_data['Date'] = new_data['Date'].dt.strftime('%d/%m/%Y')
     new_data = new_data[['Date', 'Close (USD)']][0:10]
 
-    # ALTERNATIVE
-
     table_header = [
         html.Thead(html.Tr([html.Th("Date"), html.Th("Close (USD)")]))
     ]
@@ -142,6 +145,40 @@ def get_pred_pric_tab(prediction, dates):
     table_body = [html.Tbody(row_list)]
 
     table = dbc.Table(table_header + table_body, bordered=False)
+
+    return table
+
+def get_pred_pric_tab_v2(prediction, dates):
+    if (prediction.tolist())[0] < 1:
+        formatted_pred = ['${:,.3f}'.format(member) for member in (prediction.tolist())]
+    elif 1 <= (prediction.tolist())[0] < 1000:
+        formatted_pred = ['${:,.2f}'.format(member) for member in (prediction.tolist())]
+    else:
+        formatted_pred = ['${:,.0f}'.format(member) for member in (prediction.tolist())]
+
+    formatted_dates = [member.strftime('%d/%m/%Y') for member in dates][0:len(formatted_pred)]
+
+    table_header = [
+        html.Tr([
+            html.Th("Date",style={'color':'#ffffff'}),
+            html.Th("Close Price",style={'color':'#ffffff','text-align':'right'}),
+        ])
+    ]
+
+    rows = []
+
+    for i in range(0,10):
+
+        row = html.Tr([
+            html.Td(formatted_dates[i], style={'color': '#ffffff'}),
+            html.Td(formatted_pred[i], style={'color': '#ffffff','text-align':'right'}),
+        ])
+
+        rows.append(row)
+
+    table_header.extend(rows)
+
+    table = dbc.Table([html.Tbody(table_header)], bordered=False, responsive=True, style={'border-bottom': '1px solid rgba(255,255,255,0.1)'})
 
     return table
 

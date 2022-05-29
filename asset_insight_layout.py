@@ -6,8 +6,8 @@ from yfinance import download
 
 # import internal project libraries
 from asset_ins_func import candlestick_fig_create, run_linear_regression, create_pred_plot
-from asset_ins_func import func_currency_dropdown, create_kpi_div, get_pred_pric_tab, func_button_group
-from project_variables import CONTENT_STYLE,project_colors
+from asset_ins_func import func_currency_dropdown, create_kpi_div, get_pred_pric_tab_v2, func_button_group
+from project_variables import CONTENT_STYLE,project_colors, CONTAINER_STYLE
 from project_variables import start_info as si, ticker_df
 
 
@@ -43,10 +43,7 @@ candlestick_fig = candlestick_fig_create(coin_df)
 # linear regression plot
 orig_coin_df, prediction, dates = run_linear_regression(coin_df)
 prediction_fig = create_pred_plot(orig_coin_df, prediction, dates)
-pred_pric_tab = get_pred_pric_tab(prediction, dates)
-# #rsi_gauge
-# rsi_gauge = create_rsi_gauge(get_rsi_value(coin_df))
-
+pred_pric_tab = get_pred_pric_tab_v2(prediction, dates)
 
 ####################
 # FINAL LAYOUT
@@ -57,10 +54,10 @@ ind_coins_layout = html.Div([
     dbc.Container([
         dbc.Container([
             html.H1('Asset Insights', style={'color':project_colors['white'],'font-weight': 'bold'})
-        ], style={'padding-top': '20px', 'padding-bottom': '20px'}),
+        ], style=CONTAINER_STYLE),
 
 
-        html.Div([
+        dbc.Container([
             dbc.Row([
                 dbc.Col(currency_dropdown, width=5),
                 dbc.Col(
@@ -71,35 +68,36 @@ ind_coins_layout = html.Div([
                         button_group
                     ]),
                     width=7
-                )],
-                style={'padding-top': '20px', 'padding-bottom': '20px'}, className='align-items-center')
-        ]),
+                )], className='align-items-center')
+        ], style=CONTAINER_STYLE),
 
-        html.Div(id='kpiDiv', children=[kpi_div], style={'padding-top': '40px'}),
+        dbc.Container(id='kpiDiv', children=[kpi_div], style=CONTAINER_STYLE),
 
-        html.Div([
+        dbc.Container([
             html.H2('Price Analysis'),
             dcc.Graph(id='priceGraph', figure=candlestick_fig)
-        ], style={'padding-top': '40px'}),
+        ], style=CONTAINER_STYLE),
 
-        html.Div([
+        dbc.Container([
             dbc.Row([
                 dbc.Col(
-                    html.Div([
+                    dbc.Container([
                         html.H2('Historical and Predicted Values'),
                         dcc.Graph(id='PredictGraph', figure=prediction_fig),
-                    ]), width=8
+                    ], style=CONTAINER_STYLE),
+                    width=8
                 ),
 
                 dbc.Col(
-                    html.Div([
+                    dbc.Container([
                         html.H2('Next 10 Days Prediction'),
                         html.Div(children=[pred_pric_tab], id='table_pred')
-                    ]), width=4
+                    ], style=CONTAINER_STYLE),
+                    width=4
                 )
             ])
-        ], style={'padding-top': '40px'})
-    ]),
+        ], style=CONTAINER_STYLE)
+    ], style=CONTAINER_STYLE),
 
 
 ], style=CONTENT_STYLE

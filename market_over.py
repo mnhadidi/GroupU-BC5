@@ -1,12 +1,14 @@
+# -*- coding: utf-8 -*-
+
 from dash import html
 import dash_bootstrap_components as dbc
 from dash import dcc
 
 # import internal project libraries
-from project_variables import CONTENT_STYLE, project_colors, CONTAINER_STYLE
+from project_variables import CONTENT_STYLE, project_colors, CONTAINER_STYLE, H5_STYLE
 from market_overv_func import get_top_ten_API_call, create_top_ten_coins_chart, get_simulation_plot
 from market_overv_func import crypto_sim_ind, stock_sim_ind,get_top_ten_coins_data, get_fear_greed_gauge
-from market_overv_func import get_top_coins_tbl, get_stories, get_stories_card,get_top_coins_tbl_v2
+from market_overv_func import get_stories, get_stories_card,get_top_coins_tbl_v2
 
 ####################
 # DATA
@@ -44,7 +46,7 @@ market_over = html.Div([
             dbc.Row([
                 dbc.Col(
                     dbc.Container([
-                        html.H2('Crypto vs Stock Simulation'),
+                        html.H2('Crypto vs Stock Simulation', style=H5_STYLE),
                         html.P('If you had invested $1000 in Crypto or Stocks one year ago...',
                                    style={'color': '#ffffff'}),
                         dbc.Row([
@@ -53,13 +55,13 @@ market_over = html.Div([
                                 html.Div([
 
                                     html.Div([
-                                        html.H4('Crypto Portfolio Value', style={'text-align':'center','color':'#ffffff'}),
+                                        html.H4('Crypto Portfolio Value', style={'text-align':'center','color': project_colors['gold']}),
                                         dcc.Graph(figure=crypto_sim_ind, style={'height':'100px'}),
                                     ], style={"background-color": project_colors['dark-blue'],
                                               "margin-bottom":"20px",'padding':'10px'}),
 
                                     html.Div([
-                                        html.H4('Stock Portfolio Value', style={'text-align':'center','color':'#ffffff'}),
+                                        html.H4('Stock Portfolio Value', style={'text-align':'center','color': project_colors['bright-blue']}),
                                         dcc.Graph(figure=stock_sim_ind, style={'height':'100px'}),
                                     ], style={"background-color": project_colors['dark-blue'],'padding':'10px'}),
 
@@ -77,14 +79,14 @@ market_over = html.Div([
             dbc.Row([
                 dbc.Col(
                     dbc.Container([
-                        html.H2('Top 10 Crypto Market Cap'),
+                        html.H2('Top 10 Crypto Market Cap', style=H5_STYLE),
                         dcc.Graph(figure=top_ten_coin_mkt_cap)
                     ], style=CONTAINER_STYLE),
                     width=8),
 
                 dbc.Col(
                     dbc.Container([
-                        html.H2('Bull vs Bear'),
+                        html.H2('Bull vs Bear', style=H5_STYLE),
                         top_coin_table
                     ], style=CONTAINER_STYLE),
                     width=4)
@@ -99,14 +101,14 @@ market_over = html.Div([
 
                 dbc.Col(
                     dbc.Container([
-                        html.H2('Fear and Greed Index', style={'margin-bottom':'15px'}),
-                        dcc.Graph(figure=fear_and_greed_gauge),
+                        html.H2('Fear and Greed Index', style=H5_STYLE),
+                        dcc.Graph(figure=fear_and_greed_gauge, style={'margin-top':'15px'}),
                     ], style=CONTAINER_STYLE), width=5
                 ),
 
                 dbc.Col(
                     dbc.Container([
-                        html.H2('Latest Stories on Crypto', style={'margin-bottom':'15px'}),
+                        html.H2('Latest Stories on Crypto', style=H5_STYLE),
                         stories_card
                     ], style=CONTAINER_STYLE), width=7
                 ),

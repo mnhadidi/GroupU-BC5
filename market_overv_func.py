@@ -9,7 +9,7 @@ import dash_bootstrap_components as dbc
 from datetime import datetime
 import numpy as np
 
-from project_variables import mkt_over_info, project_colors, ticker_df, ticker_df
+from project_variables import mkt_over_info, project_colors, ticker_df, ticker_df, H5_STYLE
 
 ##########################
 # API CALL DEF
@@ -66,6 +66,8 @@ def create_top_ten_coins_chart(resp):
 
 
     fig.update_traces(textposition='outside',cliponaxis=False)
+    fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
+
     return fig
 
 
@@ -107,14 +109,16 @@ def get_simulation_plot():
     fig.add_trace(go.Scatter(x=df_plot['Date'],
                              y=df_plot['InvestCryptoVal'],
                              mode='lines',
-                             name='Crypto Index (CMC Crypto 200)'))
+                             name='Crypto Index (CMC Crypto 200)',
+                             line_color=project_colors['gold']))
 
     fig.add_trace(go.Scatter(x=df_plot['Date'],
                              y=df_plot['InvestStockVal'],
                              mode='lines',
-                             name='Stock Index (S&P 500)'))
+                             name='Stock Index (S&P 500)',
+                             line_color=project_colors['bright-blue']))
 
-    fig.add_hline(y=1000, opacity=1)
+    fig.add_hline(y=1000, opacity=1, line_color=project_colors['pink'])
 
     fig.update_layout(
         margin={'t': 20, 'l': 20, 'r': 20, 'b': 20},
@@ -129,8 +133,9 @@ def get_simulation_plot():
         plot_bgcolor='rgba(0,0,0,0)',
     )
 
-    fig.update_xaxes(gridcolor='rgba(255,255,255,0.7)')
-    fig.update_yaxes(gridcolor='rgba(255,255,255,0.7)')
+    fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
+    fig.update_xaxes(gridcolor='rgba(255,255,255,0.2)')
+    fig.update_yaxes(gridcolor='rgba(255,255,255,0.2)')
 
     return fig, df_plot
 
@@ -143,13 +148,14 @@ def crypto_sim_ind(df_plot):
     value_sim = df_plot['InvestCryptoVal'].tail(1).tolist()[0]
 
     fig = go.Figure()
+    decreasing={'color':project_colors['red']}
+    increasing = {'color': project_colors['green']}
 
     fig.add_trace(go.Indicator(
         mode="number+delta",
         value=value_sim,
-        number={'valueformat': "$,.0f", 'font': {'color': '#ffffff'}},
-        # domain={'x': [0, 1], 'y': [0, 1]},
-        delta={'reference': 1000, 'relative': True, 'valueformat': ".1%"}
+        number={'valueformat': "$,.0f", 'font': {'color': project_colors['gold']}},
+        delta={'reference': 1000, 'relative': True, 'valueformat': ".1%", 'decreasing':decreasing, 'increasing': increasing}
     ))
 
     fig.update_layout(
@@ -164,15 +170,17 @@ def crypto_sim_ind(df_plot):
 
 def stock_sim_ind(df_plot):
     value_sim = df_plot['InvestStockVal'].tail(1).tolist()[0]
+    decreasing = {'color': project_colors['red']}
+    increasing = {'color': project_colors['green']}
 
     fig = go.Figure()
 
     fig.add_trace(go.Indicator(
         mode="number+delta",
         value=value_sim,
-        number={'valueformat': "$,.0f", 'font': {'color': '#ffffff'}},
+        number={'valueformat': "$,.0f", 'font': {'color': project_colors['bright-blue']}},
         # domain={'x': [0, 0.5], 'y': [0, 0.5]},
-        delta={'reference': 1000, 'relative': True, 'valueformat': ".1%"}
+        delta={'reference': 1000, 'relative': True, 'valueformat': ".1%", 'decreasing':decreasing, 'increasing': increasing}
     ))
 
     fig.update_layout(
@@ -243,51 +251,51 @@ def get_top_ten_coins_data(resp):
 # used on market_over
 ##########################
 
-def get_top_coins_tbl(df_table):
-    coin_image = df_table['CoinImage']
-    coin_name = df_table['CoinName']
-    last_close_price = df_table['LastClosePrice']
-    one_day_change = df_table['OneDayPrcChg']
-    bear_bull = df_table['BearBull']
-
-
-    last_close_price_form = ['${:,.2f}'.format(member) for member in last_close_price]
-
-    header = [
-        html.H2('Bear vs Bull'),
-        dbc.Row([
-            dbc.Col(html.P('', style={'color': '#ffffff'}), width=1),
-            dbc.Col(html.P('Coin', style={'color': project_colors['pink'],'font-weight': 'bold'}), width=4),
-            dbc.Col(html.P('Last Close', style={'color': project_colors['pink'],'font-weight': 'bold','text-align':'right'}), width=4),
-            dbc.Col(html.P('', style={'color': '#ffffff'}), width=2)
-        ])
-    ]
-
-    rows = []
-
-    for i in range(0, 10):
-        row = dbc.Row([
-            dbc.Col(html.Img(src=coin_image[i],style={'width': '20px', 'height': '20px'}),
-                    width= 1),
-            dbc.Col(coin_name[i],
-                    style={'color':'#ffffff'},
-                    width= 4),
-            dbc.Col(last_close_price_form[i],
-                    style={'color':'#ffffff','text-align':'right'},
-                    width= 5),
-            dbc.Col(html.Img(src='assets/' + bear_bull[i] + '.png', style={'width': '20px', 'height': '20px'}),
-                    width= 2)
-        ])
-
-        rows.append(row)
-
-    header.extend(rows)
-
-    table = dbc.Container(header,
-                          style={"background-color": project_colors['dark-blue'],
-                                         'padding-top':'10px','padding-bottom':'10px'})
-
-    return table
+# def get_top_coins_tbl(df_table):
+#     coin_image = df_table['CoinImage']
+#     coin_name = df_table['CoinName']
+#     last_close_price = df_table['LastClosePrice']
+#     one_day_change = df_table['OneDayPrcChg']
+#     bear_bull = df_table['BearBull']
+#
+#
+#     last_close_price_form = ['${:,.2f}'.format(member) for member in last_close_price]
+#
+#     header = [
+#         html.H2('Bear vs Bull'),
+#         dbc.Row([
+#             dbc.Col(html.P('', style={'color': '#ffffff'}), width=1),
+#             dbc.Col(html.P('Coin', style={'color': project_colors['pink'],'font-weight': 'bold'}), width=4),
+#             dbc.Col(html.P('Last Close', style={'color': project_colors['pink'],'font-weight': 'bold','text-align':'right'}), width=4),
+#             dbc.Col(html.P('', style={'color': '#ffffff'}), width=2)
+#         ])
+#     ]
+#
+#     rows = []
+#
+#     for i in range(0, 10):
+#         row = dbc.Row([
+#             dbc.Col(html.Img(src=coin_image[i],style={'width': '20px', 'height': '20px'}),
+#                     width= 1),
+#             dbc.Col(coin_name[i],
+#                     style={'color':'#ffffff'},
+#                     width= 4),
+#             dbc.Col(last_close_price_form[i],
+#                     style={'color':'#ffffff','text-align':'right'},
+#                     width= 5),
+#             dbc.Col(html.Img(src='assets/' + bear_bull[i] + '.png', style={'width': '20px', 'height': '20px'}),
+#                     width= 2)
+#         ])
+#
+#         rows.append(row)
+#
+#     header.extend(rows)
+#
+#     table = dbc.Container(header,
+#                           style={"background-color": project_colors['dark-blue'],
+#                                          'padding-top':'10px','padding-bottom':'10px'})
+#
+#     return table
 
 
 def get_top_coins_tbl_v2(df_table):
@@ -340,8 +348,11 @@ def get_stories_card(response_stories):
     def create_card(story):
         news_story = dbc.Container([
             html.H5(story['title'],style={'color':'#ffffff'}),
-            html.Div(html.H6('by: ' + story['source']),style={'float':'left'}),
-            html.Div(html.H6('on: ' + datetime.utcfromtimestamp(story['published_on']).strftime('%Y-%m-%d %H:%M:%S')),
+            html.Div(html.H6(children=('by: ' + story['source']),
+                             style={'color':'rgba(255,255,255,0.5)'}),
+                     style={'float':'left'}),
+            html.Div(html.H6(children=('on: ' + datetime.utcfromtimestamp(story['published_on']).strftime('%Y-%m-%d %H:%M:%S')),
+                             style={'color':'rgba(255,255,255,0.5)'}),
                      style={'float':'left','padding-left':'20px','padding-right':'20px'}),
             html.Div(dcc.Link("LINK", href=story['guid']))
         ], style={'margin-left':0,'padding-left':0,'padding-right':0})
@@ -410,7 +421,7 @@ def get_fear_greed_gauge():
                     text=f"<b>Fear & Greed Index</b><br>{current_value}",
                     x=0.5, xanchor="center", xref="paper",
                     y=0.25, yanchor="bottom", yref="paper",
-                    showarrow=False,
+                    showarrow=False, font=dict(size=20)
                 )
             ],
             shapes=[
@@ -430,5 +441,7 @@ def get_fear_greed_gauge():
             ]
         )
     )
+
+    fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
 
     return fig

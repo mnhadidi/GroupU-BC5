@@ -12,7 +12,8 @@ project_colors = {
     'white': '#FFFFFF',
     'red': '#F6465D',
     'green': '#0ECB81',
-    'gold':'goldenrod'
+    'gold':'#DAA520',
+    'bright-blue':'cornflowerblue'
 }
 
 # content style for right side of dashboard
@@ -24,6 +25,10 @@ CONTENT_STYLE = {
 
 CONTAINER_STYLE = {
     "padding": "20px 0",
+}
+
+H5_STYLE = {
+    "color": project_colors['bright-blue'],
 }
 
 
