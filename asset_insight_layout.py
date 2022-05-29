@@ -1,5 +1,5 @@
 # import external libraries
-from dash import html
+from dash import html, dcc
 import dash_bootstrap_components as dbc
 from pandas import to_datetime
 from yfinance import download

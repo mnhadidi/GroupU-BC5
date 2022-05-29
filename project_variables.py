@@ -38,8 +38,8 @@ start_info = {
 
 # get all tickers
 def cleanup_ticker_info():
-    stock_list = pd.read_csv("C:/Users/Mimi/PycharmProjects/cryptodash-groupu/data/stock-full-list.csv")
-    coin_list = pd.read_csv("C:/Users/Mimi/PycharmProjects/cryptodash-groupu/data/coin-full-list.csv")
+    stock_list = pd.read_csv("data/stock-full-list.csv")
+    coin_list = pd.read_csv("data/coin-full-list.csv")
 
     #add stock to type
     stock_list['type'] = 'stock'
