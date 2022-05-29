@@ -3,13 +3,12 @@ import plotly.graph_objs as go
 import json
 import yfinance
 import pandas as pd
-from dash import dash_table
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 from datetime import datetime
 import numpy as np
-from plotly.subplots import make_subplots
 
+# internal libraries
 from project_variables import mkt_over_info, project_colors, ticker_df, CONTAINER_STYLE
 
 ##########################
@@ -87,14 +86,15 @@ def get_simulation_plot():
     # reset index to get date as column
     hist_sp = hist_sp.reset_index()
     hist_crypto = hist_crypto.reset_index()
+    # drop na
+    hist_sp = hist_sp.dropna()
+    hist_crypto = hist_crypto.dropna()
     # setup column names for plot df
     column_names = ["Date", "CloseCrypto", "CloseStock", 'InvestCryptoVal', 'InvestStockVal']
     # create plot df
     df_plot = pd.DataFrame(columns=column_names)
     # populate date, stock and crypto prices
     df_plot = df_plot.assign(Date=hist_crypto['Date'], CloseCrypto=hist_crypto['Close'], CloseStock=hist_sp['Close'])
-    # remove empties of last 2 rows
-    df_plot = df_plot[0:-2]
     # getting percent change day to day
     df_plot['InvestCryptoChang'] = df_plot['CloseCrypto'].pct_change() + 1
     df_plot['InvestStockChang'] = df_plot['CloseStock'].pct_change() + 1
@@ -457,14 +457,12 @@ def get_index_row(exchange_name,currency, df, color):
         color_change = project_colors['red']
 
     content_list = [
-        dbc.Row([
-            dbc.Col([html.H4(exchange_name, style={'color': 'white'})]),
-            dbc.Col([html.P(children=['Currency: ' + currency], style={'color': 'rgba(255,255,255,0.5', 'text-align': 'right'})]),
+        html.H4(exchange_name, style={'color': 'white'}),
+        html.P(children=[currency], style={'color': 'rgba(255,255,255,0.5'}),
 
-        ]),
         dbc.Row([
-            dbc.Col([html.P(last_price_str, style={'color': project_colors['bright-blue'],'font-size':30, 'margin-bottom':'2px'})]),
-            dbc.Col([html.P(day_change_pct_str, style={'color':color_change,'text-align':'right','font-size':30, 'margin-bottom':'2px'})]),
+            dbc.Col([html.H5(last_price_str, style={'color': project_colors['bright-blue'], 'margin-bottom':'2px'})]),
+            dbc.Col([html.H5(day_change_pct_str, style={'color':color_change,'text-align':'right', 'margin-bottom':'2px'})]),
         ], style={'margin-bottom':0}),
 
         dbc.Row([

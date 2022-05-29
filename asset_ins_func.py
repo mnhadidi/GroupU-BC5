@@ -16,9 +16,13 @@ from project_variables import project_colors, time_frame_options, start_info
 
 ##########################
 # CANDLESTICK FIGURE
-# used on ind_coins_layout
+# used on asset_insight_layout
 ##########################
 def candlestick_fig_create(coin_df):
+    # adding SMA50 and SMA100
+    coin_df.loc[:, 'SMA50'] = coin_df['Close'].rolling(window=50).mean()
+    coin_df.loc[:, 'SMA100'] = coin_df['Close'].rolling(window=100).mean()
+
     candlestick_fig = go.Figure(
         data=[
             go.Candlestick(
@@ -28,10 +32,21 @@ def candlestick_fig_create(coin_df):
                 low=coin_df["Low"],
                 close=coin_df["Close"],
                 increasing_line_color=project_colors['green'],
-                decreasing_line_color=project_colors['red']
+                decreasing_line_color=project_colors['red'],
+                name='Close'
             )
         ]
     )
+
+    # sma50
+    candlestick_fig.add_trace(
+        go.Scatter(x=coin_df.index.values, y=coin_df["SMA50"], name='SMA50',
+                   line=dict(color='rgba(255,255,255,0.3)'), mode='lines'))
+
+    # sma100
+    candlestick_fig.add_trace(
+        go.Scatter(x=coin_df.index.values, y=coin_df["SMA100"], name='SMA100',
+                   line=dict(color='rgba(255,255,255,0.7)'), mode='lines'))
 
     # Edit the layout
     candlestick_fig.update_layout(xaxis_title='Date', yaxis_title='Price USD', plot_bgcolor='rgba(0,0,0,0)',
@@ -47,7 +62,7 @@ def candlestick_fig_create(coin_df):
 
 ##########################
 # LINEAR REGRESSION MODEL
-# used on ind_coins_layout
+# used on asset_insight_layout
 ##########################
 
 def run_linear_regression(orig_coin_df):
@@ -74,7 +89,11 @@ def run_linear_regression(orig_coin_df):
 
     prediction = model.predict(x_test)
 
-    dates = pd.date_range(start=datetime.today(), periods=30).to_pydatetime().tolist()
+    # start date
+    start_date = datetime.today()
+    start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    dates = pd.date_range(start=start_date, periods=30).to_pydatetime().tolist()
 
     prediction = prediction[0:30]
 
@@ -83,18 +102,27 @@ def run_linear_regression(orig_coin_df):
 
 ##########################
 # LINEAR REGRESSION PLOT
-# used on ind_coins_layout
+# used on asset_insight_layout
 ##########################
 def create_pred_plot(orig_coin_df, prediction, dates):
+
+
+
+
     prediction_fig = go.Figure()
     # Create and style traces
+
+
+    # close price line
     prediction_fig = prediction_fig.add_trace(
         go.Scatter(x=orig_coin_df['Date'], y=orig_coin_df["Close"], name='Historical',
                    line=dict(color=project_colors['pink']), mode='lines'))
+    # prediction line
     prediction_fig = prediction_fig.add_trace(
         go.Scatter(x=dates, y=prediction, name='Prediction',
                    line=dict(color=project_colors['gold']),
                    mode='lines'))
+
 
     # Edit the layout
     prediction_fig = prediction_fig.update_layout(xaxis_title='Date',
@@ -121,7 +149,7 @@ def create_pred_plot(orig_coin_df, prediction, dates):
 
 ##########################
 # TABLE WITH NEXT PREDICTED PRICES
-# used on ind_coins_layout
+# used on asset_insight_layout
 ##########################
 
 def get_pred_pric_tab(prediction, dates):
@@ -186,7 +214,7 @@ def get_pred_pric_tab_v2(prediction, dates):
 
 ##########################
 # KPI DIV
-# used on ind_coins_layout
+# used on asset_insight_layout
 ##########################
 def create_kpi_div(timeframe, coin_df):
     # get values
@@ -310,7 +338,7 @@ def create_kpi_div(timeframe, coin_df):
 
 """
 CURRENCY DROPDOWN
-used on ind_coins_layout
+used on asset_insight_layout
 """
 
 
@@ -332,7 +360,7 @@ def func_currency_dropdown(coin_dict, coin):
 
 ##########################
 # BUTTON GROUP
-# used on ind_coins_layout
+# used on asset_insight_layout
 ##########################
 
 def func_button_group():
@@ -358,7 +386,7 @@ def func_button_group():
 
 ##########################
 # RSI CALCULATIONS
-# used on ind_coins_layout
+# used on asset_insight_layout
 ##########################
 
 def get_rsi_value(data_for_rsi):
@@ -405,83 +433,3 @@ def get_rsi_value(data_for_rsi):
     rsi_rma = calc_rsi(close, lambda s: s.ewm(alpha=1 / length).mean()).to_frame()  # Approximates TradingView.
 
     return rsi_rma['rsi'].iloc[-1]
-
-
-##########################
-# RSI GAUGE
-# used on ind_coins_layout
-##########################
-#
-# def create_rsi_gauge(rsi_value):
-#     # plot_bgcolor = "rgba(0,0,0,0)"
-#     # quadrant_colors = [plot_bgcolor, "#2bad4e", "#85e043", "#eff229", "#f2a529", "#f25829"]
-#     # quadrant_text = ["", "<b>High</b>", "", "", "", "<b>Low</b>"]
-#     # n_quadrants = len(quadrant_colors) - 1
-#     #
-#     # min_value = 0
-#     # max_value = 100
-#     # hand_length = np.sqrt(2) / 4
-#     # hand_angle = np.pi * (1 - (max(min_value, min(max_value, rsi_value)) - min_value) / (max_value - min_value))
-#     #
-#     # fig = go.Figure(
-#     #     data=[
-#     #         go.Pie(
-#     #             values=[0.5] + (np.ones(n_quadrants) / 2 / n_quadrants).tolist(),
-#     #             rotation=90,
-#     #             hole=0.5,
-#     #             # marker_colors=quadrant_colors,
-#     #             text=quadrant_text,
-#     #             textinfo="text",
-#     #             hoverinfo="skip",
-#     #         ),
-#     #     ],
-#     #     layout=go.Layout(
-#     #         showlegend=False,
-#     #         margin=dict(b=0,t=10,l=10,r=10),
-#     #         width=450,
-#     #         height=450,
-#     #         paper_bgcolor=plot_bgcolor,
-#     #         annotations=[
-#     #             go.layout.Annotation(
-#     #                 text=f"<b>Relative Strength Index</b><br>{rsi_value}",
-#     #                 x=0.5, xanchor="center", xref="paper",
-#     #                 y=0.25, yanchor="bottom", yref="paper",
-#     #                 showarrow=False,
-#     #             )
-#     #         ],
-#     #         shapes=[
-#     #             go.layout.Shape(
-#     #                 type="circle",
-#     #                 x0=0.48, x1=0.52,
-#     #                 y0=0.48, y1=0.52,
-#     #                 fillcolor="#333",
-#     #                 # line_color="#333",
-#     #             ),
-#     #             go.layout.Shape(
-#     #                 type="line",
-#     #                 x0=0.5, x1=0.5 + hand_length * np.cos(hand_angle),
-#     #                 y0=0.5, y1=0.5 + hand_length * np.sin(hand_angle),
-#     #                 line=dict(color="#333", width=4)
-#     #             )
-#     #         ]
-#     #     )
-#     # )
-#
-#     fig = go.Figure(go.Indicator(
-#         mode="gauge+number",
-#         value=rsi_value,
-#         gauge={
-#             'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "black"},
-#             'bar': {'color': "rgba(0,0,0,0)"},
-#             'borderwidth': 0,
-#             'steps': [
-#                 {'range': [0, 25], 'color': '#f25829'},
-#                 {'range': [25, 50], 'color': '#eff229'},
-#                 {'range': [50, 75], 'color': '#85e043'},
-#                 {'range': [75, 100], 'color': '#2bad4e'}],
-#             'threshold': {
-#                 'line': {'color': "black", 'width': 10},
-#                 'thickness': 0.75,
-#                 'value': rsi_value}}))
-#
-#     return fig

@@ -62,16 +62,15 @@ market_over = html.Div([
                                 html.Div([
 
                                     html.Div([
-                                        html.H4('Crypto Portfolio Value', style={'text-align':'center','color': project_colors['gold']}),
-                                        dcc.Graph(figure=crypto_sim_ind, style={'height':'100px'}),
-                                    ], style={"background-color": project_colors['dark-blue'],
-                                              "margin-bottom":"20px",'padding':'10px'}),
+                                        html.H5('Stock Portfolio Value', style={'text-align':'center','color': project_colors['bright-blue']}),
+                                        dcc.Graph(figure=stock_sim_ind, style={'height':'100px'}),
+                                    ], style={"background-color": project_colors['dark-blue'],"margin-bottom":"20px",'padding':'10px'}),
 
                                     html.Div([
-                                        html.H4('Stock Portfolio Value', style={'text-align':'center','color': project_colors['bright-blue']}),
-                                        dcc.Graph(figure=stock_sim_ind, style={'height':'100px'}),
-                                    ], style={"background-color": project_colors['dark-blue'],'padding':'10px'}),
-
+                                        html.H5('Crypto Portfolio Value', style={'text-align':'center','color': project_colors['gold']}),
+                                        dcc.Graph(figure=crypto_sim_ind, style={'height':'100px'}),
+                                    ], style={"background-color": project_colors['dark-blue'],
+                                              'padding':'10px'})
                                 ]),
                                 width=3)
                         ], className='align-items-center')

@@ -27,16 +27,12 @@ SIDEBAR_BOTTOM = {
 }
 
 sidebar_top = html.Div([
-        # html.Div([
-        #         html.Img(src='assets/logo-blue.png',
-        #              style={'width': '60px', 'height': '60px'},
-        #              )
-        #     ], style={'display': 'flex', 'justify-content': 'center', 'margin-bottom':'20px'}),
+        html.Div([
+            html.Img(src='assets/logo-blue-alt.png',
+                     style={'width': 'auto','height': '12rem','max-height':'15rem', 'margin':'0 auto 2rem auto'})
+        ], style={'display': 'flex', 'justify-content': 'center'}),
 
-        html.Img(src='assets/logo-blue-alt.png',
-                 style={'width': '100%', 'height': 'auto', 'margin-bottom':'50px'},
-                 ),
-        # html.H2("MarketDash", style={"color":project_colors['white'],"padding-bottom":'2rem','text-align':'center'}),
+
         dbc.Nav(
             [
                 dbc.NavLink("Asset Insights", href="/", active="exact"),

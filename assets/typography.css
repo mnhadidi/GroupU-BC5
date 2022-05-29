@@ -10,3 +10,15 @@ h1, h3, h4, h5, h6 {
 h2 {
     color: #6495ED;
 }
+
+h4 {
+    font-size: 2vw;
+}
+
+h5 {
+    font-size: 1.5vw;
+}
+
+p {
+    font-size: 0.8vw;
+}
