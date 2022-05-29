@@ -11,11 +11,13 @@ import numpy as np
 # internal libraries
 from project_variables import mkt_over_info, project_colors, ticker_df, CONTAINER_STYLE
 
-##########################
-# API CALL DEF
-# used on market_over
-##########################
-def get_top_ten_API_call():
+"""
+API CALL FUNCTION
+used on market_over
+"""
+
+
+def get_top_ten_api_call():
     try:
         print('Started API call')
         resp = requests.get(mkt_over_info['api_link_top_ten'] + mkt_over_info['api_key'])
@@ -30,10 +32,13 @@ def get_top_ten_API_call():
     # get json from query
     return resp
 
-##########################
-# TOP TEN COINS MARKET CAP
-# used on market_over
-##########################
+
+"""
+TOP TEN COINS MARKET CAP
+used on market_over
+"""
+
+
 def create_top_ten_coins_chart(resp):
     coin_name = []
     coin_cap = []
@@ -63,20 +68,20 @@ def create_top_ten_coins_chart(resp):
                       margin={'t': 20, 'l': 20, 'r': 30, 'b': 20}
                       )
 
-
-
-    fig.update_traces(textposition='outside',cliponaxis=False)
+    fig.update_traces(textposition='outside', cliponaxis=False)
     fig.update_layout(title_font_color='#FFFFFF', font_color='#FFFFFF')
 
     return fig
 
 
-##########################
-# CRYPTO STOCK SIMULATION PLOT
-# used on market_over
-##########################
+"""
+CRYPTO STOCK SIMULATION PLOT
+used on market_over
+"""
+
+
 def get_simulation_plot():
-    #### CLEANUP DATA
+    # CLEANUP DATA
     # get full data from yahoo finance
     s_p = yfinance.Ticker("^GSPC")
     crypto_index = yfinance.Ticker("^CMC200")
@@ -105,7 +110,7 @@ def get_simulation_plot():
         df_plot.loc[i, 'InvestCryptoVal'] = df_plot.loc[i - 1, 'InvestCryptoVal'] * df_plot.loc[i, 'InvestCryptoChang']
         df_plot.loc[i, 'InvestStockVal'] = df_plot.loc[i - 1, 'InvestStockVal'] * df_plot.loc[i, 'InvestStockChang']
 
-    #### CREATE CHART
+    # CREATE CHART
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df_plot['Date'],
                              y=df_plot['InvestCryptoVal'],
@@ -140,23 +145,26 @@ def get_simulation_plot():
 
     return fig, df_plot
 
-##########################
-# INDICATORS FOR SIMULATION
-# used on market_over
-##########################
+
+"""
+INDICATORS FOR SIMULATION
+used on market_over
+"""
+
 
 def crypto_sim_ind(df_plot):
     value_sim = df_plot['InvestCryptoVal'].tail(1).tolist()[0]
 
     fig = go.Figure()
-    decreasing={'color':project_colors['red']}
+    decreasing = {'color': project_colors['red']}
     increasing = {'color': project_colors['green']}
 
     fig.add_trace(go.Indicator(
         mode="number+delta",
         value=value_sim,
         number={'valueformat': "$,.0f", 'font': {'color': project_colors['gold']}},
-        delta={'reference': 1000, 'relative': True, 'valueformat': ".1%", 'decreasing':decreasing, 'increasing': increasing}
+        delta={'reference': 1000, 'relative': True, 'valueformat': ".1%", 'decreasing': decreasing,
+               'increasing': increasing}
     ))
 
     fig.update_layout(
@@ -181,7 +189,8 @@ def stock_sim_ind(df_plot):
         value=value_sim,
         number={'valueformat': "$,.0f", 'font': {'color': project_colors['bright-blue']}},
         # domain={'x': [0, 0.5], 'y': [0, 0.5]},
-        delta={'reference': 1000, 'relative': True, 'valueformat': ".1%", 'decreasing':decreasing, 'increasing': increasing}
+        delta={'reference': 1000, 'relative': True, 'valueformat': ".1%", 'decreasing': decreasing,
+               'increasing': increasing}
     ))
 
     fig.update_layout(
@@ -192,10 +201,13 @@ def stock_sim_ind(df_plot):
 
     return fig
 
-##########################
-# TOP TEN DATA TABLE DATA
-# used on market_over
-##########################
+
+"""
+TOP TEN DATA TABLE DATA
+used on market_over
+"""
+
+
 def get_top_ten_coins_data(resp):
     coin = []
     coin_name = []
@@ -204,7 +216,6 @@ def get_top_ten_coins_data(resp):
     one_day_prc_change = []
     bear_bull = []
     coin_image = []
-
 
     for line in resp['Data']:
         coin.append(line['CoinInfo']['Name'])
@@ -225,8 +236,8 @@ def get_top_ten_coins_data(resp):
 
     for ind_coin in coin:
         data = yfinance.download(ind_coin + "-USD", start="2022-04-27", end="2022-05-27")
-        thirty_change = (data['Close'][-1] / data['Close'][0]) -1
-        one_change = (data['Close'][-1] / data['Close'][-2]) -1
+        thirty_change = (data['Close'][-1] / data['Close'][0]) - 1
+        one_change = (data['Close'][-1] / data['Close'][-2]) - 1
 
         thirty_day_prc_change.append(thirty_change)
         one_day_prc_change.append(one_change)
@@ -237,20 +248,21 @@ def get_top_ten_coins_data(resp):
         else:
             bear_bull.append('bear')
 
-
-    column_names = ["Coin", "CoinName", 'LastClosePrice', 'ThirtyDayPrcChng','OneDayPrcChg', 'BearBull','CoinImage']
+    column_names = ["Coin", "CoinName", 'LastClosePrice', 'ThirtyDayPrcChng', 'OneDayPrcChg', 'BearBull', 'CoinImage']
     # create plot df
     df_table = pd.DataFrame(columns=column_names)
     df_table = df_table.assign(Coin=coin, CoinName=coin_name, LastClosePrice=last_close_price,
-                                ThirtyDayPrcChng=thirty_day_prc_change,OneDayPrcChg=one_day_prc_change,
-                                BearBull=bear_bull, CoinImage=coin_image)
+                               ThirtyDayPrcChng=thirty_day_prc_change, OneDayPrcChg=one_day_prc_change,
+                               BearBull=bear_bull, CoinImage=coin_image)
 
     return df_table
 
-##########################
-# TOP TEN DATA TABLE
-# used on market_over
-##########################
+
+"""
+TOP TEN DATA TABLE
+used on market_over
+"""
+
 
 def get_top_coins_tbl(df_table):
     coin_image = df_table['CoinImage']
@@ -262,20 +274,19 @@ def get_top_coins_tbl(df_table):
     table_header = [
         html.Tr([
             html.Th(""),
-            html.Th("Coin",style={'color':'#ffffff'}),
-            html.Th("Last Price",style={'color':'#ffffff','text-align':'right'}),
+            html.Th("Coin", style={'color': '#ffffff'}),
+            html.Th("Last Price", style={'color': '#ffffff', 'text-align': 'right'}),
             html.Th("")
         ])
     ]
 
     rows = []
 
-    for i in range(0,10):
-
+    for i in range(0, 10):
         row = html.Tr([
             html.Td(html.Img(src=coin_image[i], style={'width': '20px', 'height': '20px'}), style={'width': '25px'}),
             html.Td(coin_name[i], style={'color': '#ffffff'}),
-            html.Td(last_close_price_form[i], style={'color': '#ffffff','text-align':'right'}),
+            html.Td(last_close_price_form[i], style={'color': '#ffffff', 'text-align': 'right'}),
             html.Td(html.Img(src='assets/' + bear_bull[i] + '.png', style={'width': '20px', 'height': '20px'}))
         ])
 
@@ -283,33 +294,37 @@ def get_top_coins_tbl(df_table):
 
     table_header.extend(rows)
 
-    table = dbc.Table([html.Tbody(table_header)], bordered=False, responsive=True, style={'border-bottom': '1px solid rgba(255,255,255,0.1)'})
+    table = dbc.Table([html.Tbody(table_header)], bordered=False, responsive=True,
+                      style={'border-bottom': '1px solid rgba(255,255,255,0.1)'})
 
     return table
 
 
-##########################
-# GET STORIES
-# used on market_over
-##########################
+"""
+GET STORIES
+used on market_over
+"""
+
 
 def get_stories():
     response = requests.get("https://min-api.cryptocompare.com/data/v2/news/?lang=EN")
     response_json = response.json()
     return response_json['Data'][0:5]
 
+
 def get_stories_card(response_stories):
     def create_card(story):
         news_story = dbc.Container([
-            html.H5(story['title'],style={'color':'#ffffff'}),
+            html.H5(story['title'], style={'color': '#ffffff'}),
             html.Div(html.H6(children=('by: ' + story['source']),
-                             style={'color':'rgba(255,255,255,0.5)'}),
-                     style={'float':'left'}),
-            html.Div(html.H6(children=('on: ' + datetime.utcfromtimestamp(story['published_on']).strftime('%Y-%m-%d %H:%M:%S')),
-                             style={'color':'rgba(255,255,255,0.5)'}),
-                     style={'float':'left','padding-left':'20px','padding-right':'20px'}),
+                             style={'color': 'rgba(255,255,255,0.5)'}),
+                     style={'float': 'left'}),
+            html.Div(html.H6(
+                children=('on: ' + datetime.utcfromtimestamp(story['published_on']).strftime('%Y-%m-%d %H:%M:%S')),
+                style={'color': 'rgba(255,255,255,0.5)'}),
+                     style={'float': 'left', 'padding-left': '20px', 'padding-right': '20px'}),
             html.Div(dcc.Link("LINK", href=story['guid']))
-        ], style={'margin-left':0,'padding-left':0,'padding-right':0})
+        ], style={'margin-left': 0, 'padding-left': 0, 'padding-right': 0})
 
         return news_story
 
@@ -324,16 +339,16 @@ def get_stories_card(response_stories):
         html.Hr(),
         create_card(response_stories[4])
 
-    ], style={'margin-bottom':'50px','margin-left':0, 'padding-right':0, 'padding-left':0})
-
-
+    ], style={'margin-bottom': '50px', 'margin-left': 0, 'padding-right': 0, 'padding-left': 0})
 
     return final_layout
 
-##########################
-# FEAR AND GREED INDEX
-# used on market_over
-##########################
+
+"""
+FEAR AND GREED INDEX
+used on market_over
+"""
+
 
 def get_fear_greed_gauge():
     response = requests.get("https://api.alternative.me/fng/?limit=1")
@@ -367,8 +382,6 @@ def get_fear_greed_gauge():
         layout=go.Layout(
             showlegend=False,
             margin=dict(b=0, t=10, l=10, r=10),
-            # width=450,
-            # height=450,
             paper_bgcolor=plot_bgcolor,
             annotations=[
                 go.layout.Annotation(
@@ -401,22 +414,23 @@ def get_fear_greed_gauge():
     return fig
 
 
-##########################
-# WORLD STOCK INDICES LINE CHARTS
-# used on market_over
-##########################
+"""
+WORLD STOCK INDICES LINE CHARTS
+used on market_over
+"""
+
 
 def get_data_indices():
-    SP500 = yfinance.download(tickers=('^GSPC'), period='1y', interval='1d').reset_index()
-    FTSE = yfinance.download(tickers=('^FTSE'), period='1y', interval='1d').reset_index()
-    IBOVESPA = yfinance.download(tickers=('^BVSP'), period='1y', interval='1d').reset_index()
-    Nikkei225 = yfinance.download(tickers=('^N225'), period='1y', interval='1d').reset_index()
-    SSEComposite = yfinance.download(tickers=('000001.SS'), period='1y', interval='1d').reset_index()
+    sp500 = yfinance.download(tickers='^GSPC', period='1y', interval='1d').reset_index()
+    ftse = yfinance.download(tickers='^FTSE', period='1y', interval='1d').reset_index()
+    ibovespa = yfinance.download(tickers='^BVSP', period='1y', interval='1d').reset_index()
+    nikkei225 = yfinance.download(tickers='^N225', period='1y', interval='1d').reset_index()
+    sse_composite = yfinance.download(tickers='000001.SS', period='1y', interval='1d').reset_index()
 
-    return SP500, FTSE, IBOVESPA, Nikkei225, SSEComposite
+    return sp500, ftse, ibovespa, nikkei225, sse_composite
+
 
 def get_index_plot(df, color):
-    #### CREATE CHART
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df['Date'],
                              y=df['Close'],
@@ -443,8 +457,7 @@ def get_index_plot(df, color):
     return fig
 
 
-def get_index_row(exchange_name,currency, df, color):
-
+def get_index_row(exchange_name, currency, df, color):
     last_price = df['Close'].iloc[-1]
     day_change_pct = (last_price - df['Close'].iloc[-2]) / df['Close'].iloc[-2]
 
@@ -452,7 +465,7 @@ def get_index_row(exchange_name,currency, df, color):
     day_change_pct_str = '{:+,.3f}%'.format(day_change_pct)
 
     if day_change_pct >= 0:
-        color_change=project_colors['green']
+        color_change = project_colors['green']
     else:
         color_change = project_colors['red']
 
@@ -461,14 +474,15 @@ def get_index_row(exchange_name,currency, df, color):
         html.P(children=[currency], style={'color': 'rgba(255,255,255,0.5'}),
 
         dbc.Row([
-            dbc.Col([html.H5(last_price_str, style={'color': project_colors['bright-blue'], 'margin-bottom':'2px'})]),
-            dbc.Col([html.H5(day_change_pct_str, style={'color':color_change,'text-align':'right', 'margin-bottom':'2px'})]),
-        ], style={'margin-bottom':0}),
+            dbc.Col([html.H5(last_price_str, style={'color': project_colors['bright-blue'], 'margin-bottom': '2px'})]),
+            dbc.Col([html.H5(day_change_pct_str,
+                             style={'color': color_change, 'text-align': 'right', 'margin-bottom': '2px'})]),
+        ], style={'margin-bottom': 0}),
 
         dbc.Row([
             dbc.Col([html.P(children=['Last price'], style={'color': 'rgba(255,255,255,0.5'})]),
             dbc.Col([html.P(children=['Day change'], style={'color': 'rgba(255,255,255,0.5', 'text-align': 'right'})]),
-        ], style={'margin-top':'2px'}),
+        ], style={'margin-top': '2px'}),
 
         dcc.Graph(figure=get_index_plot(df, color))
     ]
@@ -477,19 +491,21 @@ def get_index_row(exchange_name,currency, df, color):
 
 
 def get_row_of_index_plots():
-    SP500, FTSE, IBOVESPA, Nikkei225, SSEComposite = get_data_indices()
-
+    sp500, ftse, ibovespa, nikkei225, sse_composite = get_data_indices()
 
     return_row = dbc.Container([
         dbc.Row([
-            dbc.Col(get_index_row('S&P500', 'USD', SP500, project_colors['bright-blue']),
-                    style={'padding':'20px 20px 0 20px','margin-right':'30px', "background-color": project_colors['dark-blue']}),
-            dbc.Col(get_index_row('FTSE100', 'GBP', FTSE, project_colors['bright-blue']),
-                    style={'padding':'20px 20px 0 20px','margin-right':'30px',"background-color": project_colors['dark-blue']}),
-            dbc.Col(get_index_row('IBOVESPA', 'BRL', IBOVESPA, project_colors['bright-blue']),
-                    style={'padding':'20px 20px 0 20px','margin-right':'30px',"background-color": project_colors['dark-blue']}),
-            dbc.Col(get_index_row('SSEComp.', 'CNY', SSEComposite, project_colors['bright-blue']),
-                    style={'padding':'20px 20px 0 20px',"background-color": project_colors['dark-blue']}),
+            dbc.Col(get_index_row('S&P500', 'USD', sp500, project_colors['bright-blue']),
+                    style={'padding': '20px 20px 0 20px', 'margin-right': '30px',
+                           "background-color": project_colors['dark-blue']}),
+            dbc.Col(get_index_row('FTSE100', 'GBP', ftse, project_colors['bright-blue']),
+                    style={'padding': '20px 20px 0 20px', 'margin-right': '30px',
+                           "background-color": project_colors['dark-blue']}),
+            dbc.Col(get_index_row('IBOVESPA', 'BRL', ibovespa, project_colors['bright-blue']),
+                    style={'padding': '20px 20px 0 20px', 'margin-right': '30px',
+                           "background-color": project_colors['dark-blue']}),
+            dbc.Col(get_index_row('SSEComp.', 'CNY', sse_composite, project_colors['bright-blue']),
+                    style={'padding': '20px 20px 0 20px', "background-color": project_colors['dark-blue']}),
 
         ])
     ], style=CONTAINER_STYLE)

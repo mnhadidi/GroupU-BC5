@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import dash
 from dash import dcc
 from dash import html
@@ -10,7 +8,7 @@ from dash.dependencies import Input, Output
 
 # import internal project libraries
 from asset_ins_func import candlestick_fig_create, run_linear_regression
-from asset_ins_func import create_pred_plot, create_kpi_div, get_pred_pric_tab_v2
+from asset_ins_func import create_pred_plot, create_kpi_div, get_pred_pric_table
 from project_variables import project_colors, ticker_df, timeframe_tranf
 from asset_insight_layout import ind_coins_layout
 from sidebar import sidebar
@@ -75,7 +73,7 @@ def update_dashboard(coin_dropdown, data_radio):
     # number of days
     days = timeframe_tranf[data_radio]
 
-    if data_radio in ['5d','1mo']:
+    if data_radio in ['5d', '1mo']:
         data_for_prediction = download(tickers=asset_picked, period='1y', interval='1d')
     else:
         data_for_prediction = coin_df
@@ -85,9 +83,7 @@ def update_dashboard(coin_dropdown, data_radio):
     # update prediction graph
     prediction_fig = create_pred_plot(orig_coin_df.tail(days), prediction, dates)
     # update prediction table
-    pred_pric_tab = get_pred_pric_tab_v2(prediction, dates)
-
-
+    pred_pric_tab = get_pred_pric_table(prediction, dates)
 
     return candlestick_fig, date, prediction_fig, kpi_div, pred_pric_tab
 

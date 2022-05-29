@@ -1,5 +1,5 @@
 import numpy as np
-from dash import html, dash_table, dcc
+from dash import html, dcc
 import dash_bootstrap_components as dbc
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
@@ -10,14 +10,15 @@ import datetime as dt
 from typing import Callable
 
 # import internal project libraries
-from project_variables import  timeframe_full_name
+from project_variables import timeframe_full_name
 from project_variables import project_colors, time_frame_options, start_info
 
+"""
+CANDLESTICK FIGURE
+used on asset_insight_layout
+"""
 
-##########################
-# CANDLESTICK FIGURE
-# used on asset_insight_layout
-##########################
+
 def candlestick_fig_create(coin_df):
     # adding SMA50 and SMA100
     coin_df.loc[:, 'SMA50'] = coin_df['Close'].rolling(window=50).mean()
@@ -60,15 +61,15 @@ def candlestick_fig_create(coin_df):
     return candlestick_fig
 
 
-##########################
-# LINEAR REGRESSION MODEL
-# used on asset_insight_layout
-##########################
+"""
+LINEAR REGRESSION MODEL
+used on asset_insight_layout
+"""
+
 
 def run_linear_regression(orig_coin_df):
     orig_coin_df.dropna(inplace=True)
     orig_coin_df = orig_coin_df.reset_index()
-    coin_plot_df = orig_coin_df
     coin_df_train = orig_coin_df[-60:]
 
     required_features = ['Open', 'High', 'Low', 'Volume']
@@ -85,8 +86,6 @@ def run_linear_regression(orig_coin_df):
     model = LinearRegression()
     model.fit(x_train, y_train)
 
-    future_set = orig_coin_df.shift(periods=30).tail(30)
-
     prediction = model.predict(x_test)
 
     # start date
@@ -100,10 +99,12 @@ def run_linear_regression(orig_coin_df):
     return orig_coin_df, prediction, dates
 
 
-##########################
-# LINEAR REGRESSION PLOT
-# used on asset_insight_layout
-##########################
+"""
+LINEAR REGRESSION PLOT
+used on asset_insight_layout
+"""
+
+
 def create_pred_plot(orig_coin_df, prediction, dates):
     prediction_fig = go.Figure()
     # Create and style traces
@@ -116,7 +117,6 @@ def create_pred_plot(orig_coin_df, prediction, dates):
         go.Scatter(x=dates, y=prediction, name='Prediction',
                    line=dict(color=project_colors['gold']),
                    mode='lines'))
-
 
     # Edit the layout
     prediction_fig = prediction_fig.update_layout(xaxis_title='Date',
@@ -141,37 +141,13 @@ def create_pred_plot(orig_coin_df, prediction, dates):
     return prediction_fig
 
 
-##########################
-# TABLE WITH NEXT PREDICTED PRICES
-# used on asset_insight_layout
-##########################
-
-def get_pred_pric_tab(prediction, dates):
-    d = {'Date': dates[0:len(prediction)], 'Close': prediction}
-    new_data = pd.DataFrame(d)
-    new_data['Close (USD)'] = new_data['Close'].map('{:,.2f}'.format)
-    new_data['Date'] = new_data['Date'].dt.strftime('%d/%m/%Y')
-    new_data = new_data[['Date', 'Close (USD)']][0:10]
-
-    table_header = [
-        html.Thead(html.Tr([html.Th("Date"), html.Th("Close (USD)")]))
-    ]
-
-    row_list = []
-
-    for row in range(0, len(new_data.index)):
-        new_data.apply(lambda x: row_list.append(
-            html.Tr([html.Td(new_data['Date'][row]),
-                     html.Td(new_data['Close (USD)'][row])])))
+"""
+TABLE WITH NEXT PREDICTED PRICES
+used on asset_insight_layout
+"""
 
 
-    table_body = [html.Tbody(row_list)]
-
-    table = dbc.Table(table_header + table_body, bordered=False)
-
-    return table
-
-def get_pred_pric_tab_v2(prediction, dates):
+def get_pred_pric_table(prediction, dates):
     if (prediction.tolist())[0] < 1:
         formatted_pred = ['${:,.3f}'.format(member) for member in (prediction.tolist())]
     elif 1 <= (prediction.tolist())[0] < 1000:
@@ -183,33 +159,35 @@ def get_pred_pric_tab_v2(prediction, dates):
 
     table_header = [
         html.Tr([
-            html.Th("Date",style={'color':'#ffffff'}),
-            html.Th("Close Price",style={'color':'#ffffff','text-align':'right'}),
+            html.Th("Date", style={'color': '#ffffff'}),
+            html.Th("Close Price", style={'color': '#ffffff', 'text-align': 'right'}),
         ])
     ]
 
     rows = []
 
-    for i in range(0,10):
-
+    for i in range(0, 10):
         row = html.Tr([
             html.Td(formatted_dates[i], style={'color': '#ffffff'}),
-            html.Td(formatted_pred[i], style={'color': '#ffffff','text-align':'right'}),
+            html.Td(formatted_pred[i], style={'color': '#ffffff', 'text-align': 'right'}),
         ])
 
         rows.append(row)
 
     table_header.extend(rows)
 
-    table = dbc.Table([html.Tbody(table_header)], bordered=False, responsive=True, style={'border-bottom': '1px solid rgba(255,255,255,0.1)'})
+    table = dbc.Table([html.Tbody(table_header)], bordered=False, responsive=True,
+                      style={'border-bottom': '1px solid rgba(255,255,255,0.1)'})
 
     return table
 
 
-##########################
-# KPI DIV
-# used on asset_insight_layout
-##########################
+"""
+KPI DIV
+used on asset_insight_layout
+"""
+
+
 def create_kpi_div(timeframe, coin_df):
     # get values
     current_price = coin_df['Close'][-1]
@@ -352,10 +330,11 @@ def func_currency_dropdown(coin_dict, coin):
     return currency_dropdown
 
 
-##########################
-# BUTTON GROUP
-# used on asset_insight_layout
-##########################
+"""
+BUTTON GROUP
+used on asset_insight_layout
+"""
+
 
 def func_button_group():
     button_group = html.Div(

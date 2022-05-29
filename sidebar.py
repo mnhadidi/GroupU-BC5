@@ -1,10 +1,9 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import Input, Output, dcc, html
+from dash import html
 from project_variables import project_colors
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
-
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_STYLE = {
@@ -15,7 +14,7 @@ SIDEBAR_STYLE = {
     "width": "16rem",
     "padding": "2rem 1rem",
     "background-color": project_colors['dark-blue'],
-    "color":project_colors['white']
+    "color": project_colors['white']
 }
 
 SIDEBAR_BOTTOM = {
@@ -29,7 +28,7 @@ SIDEBAR_BOTTOM = {
 sidebar_top = html.Div([
         html.Div([
             html.Img(src='assets/logo-blue-alt.png',
-                     style={'width': 'auto','height': '12rem','max-height':'15vh', 'margin':'0 auto 2rem auto'})
+                     style={'width': 'auto', 'height': '12rem', 'max-height': '15vh', 'margin': '0 auto 2rem auto'})
         ], style={'display': 'flex', 'justify-content': 'center'}),
 
 
@@ -49,16 +48,16 @@ sidebar_top = html.Div([
 
 sidebar_bottom = html.Div([
 
-    html.P('Group U', style={'text-align': 'left', 'color': 'rgba(255,255,255,0.8)', 'font-weight':'bold'}),
-    html.P( ['Beatriz Ferreira', html.Br(), 'Beatriz Peres', html.Br(),
-             'Diogo Marques', html.Br(), 'Miriam Hadidi Pereira']
-            , style={'text-align': 'left', 'color': 'rgba(255,255,255,0.7)', 'margin-bottom':'15px'}),
+    html.P('Group U', style={'text-align': 'left', 'color': 'rgba(255,255,255,0.8)', 'font-weight': 'bold'}),
+    html.P(['Beatriz Ferreira', html.Br(), 'Beatriz Peres', html.Br(),
+            'Diogo Marques', html.Br(), 'Miriam Hadidi Pereira'],
+           style={'text-align': 'left', 'color': 'rgba(255,255,255,0.7)', 'margin-bottom': '15px'}),
     html.Div([
         html.Img(src='assets/nova_ims.png',
-             style={'width': 'auto','height': '6rem','max-height':'10rem'},
-             )
+                 style={'width': 'auto', 'height': '6rem', 'max-height': '10rem'}
+                 )
     ])
-],style=SIDEBAR_BOTTOM)
+], style=SIDEBAR_BOTTOM)
 
 sidebar = html.Div([
     sidebar_top,
