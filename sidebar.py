@@ -29,7 +29,7 @@ SIDEBAR_BOTTOM = {
 sidebar_top = html.Div([
         html.Div([
             html.Img(src='assets/logo-blue-alt.png',
-                     style={'width': 'auto','height': '12rem','max-height':'15rem', 'margin':'0 auto 2rem auto'})
+                     style={'width': 'auto','height': '12rem','max-height':'15vh', 'margin':'0 auto 2rem auto'})
         ], style={'display': 'flex', 'justify-content': 'center'}),
 
 
