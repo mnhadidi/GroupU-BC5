@@ -199,10 +199,22 @@ def create_kpi_div(timeframe, coin_df):
     rsi_value = get_rsi_value(coin_df)
 
     # format numbers
-    current_price_str = "${:,.2f}".format(current_price)
-    day_change_str = "${:+,.2f}".format(day_change) + " " + "({:+,.2f}%)".format(day_change_perc)
-    max_price = "${:,.2f}".format(max_price_of_period)
-    min_price = "${:,.2f}".format(min_price_of_period)
+    if current_price > 1000:
+        current_price_str = "${:,.0f}".format(current_price)
+        day_change_str = "${:+,.0f}".format(day_change) + " " + "({:+,.2f}%)".format(day_change_perc)
+        max_price = "${:,.0f}".format(max_price_of_period)
+        min_price = "${:,.0f}".format(min_price_of_period)
+    elif current_price > 1:
+        current_price_str = "${:,.2f}".format(current_price)
+        day_change_str = "${:+,.2f}".format(day_change) + " " + "({:+,.2f}%)".format(day_change_perc)
+        max_price = "${:,.2f}".format(max_price_of_period)
+        min_price = "${:,.2f}".format(min_price_of_period)
+    else:
+        current_price_str = "${:,.3f}".format(current_price)
+        day_change_str = "${:+,.3f}".format(day_change) + " " + "({:+,.2f}%)".format(day_change_perc)
+        max_price = "${:,.3f}".format(max_price_of_period)
+        min_price = "${:,.3f}".format(min_price_of_period)
+
     rsi_value = "{:,.2f}".format(rsi_value)
 
     # change string names
