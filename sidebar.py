@@ -48,17 +48,16 @@ sidebar_top = html.Div([
 )
 
 sidebar_bottom = html.Div([
-    html.H5('made with 🧡 and 🍕', style={'text-align': 'center', 'font-size': '12pt', 'color': 'rgba(255,255,255,0.8)'}),
-    html.H5('by Group U', style={'text-align': 'center', 'font-size': '12pt', 'color': 'rgba(255,255,255,0.8)'}),
-    html.H5('Beatriz Ferreira | Beatriz Peres | Diogo Marques | Miriam Hadidi Pereira'
-            , style={'text-align': 'center', 'font-size': '8pt', 'color': 'rgba(255,255,255,0.7)', 'margin-bottom':'30px'}),
+
+    html.P('Group U', style={'text-align': 'left', 'color': 'rgba(255,255,255,0.8)', 'font-weight':'bold'}),
+    html.P( ['Beatriz Ferreira', html.Br(), 'Beatriz Peres', html.Br(),
+             'Diogo Marques', html.Br(), 'Miriam Hadidi Pereira']
+            , style={'text-align': 'left', 'color': 'rgba(255,255,255,0.7)', 'margin-bottom':'15px'}),
     html.Div([
         html.Img(src='assets/nova_ims.png',
-             style={'width': '64px', 'height': '64px'},
+             style={'width': 'auto','height': '6rem','max-height':'10rem'},
              )
-    ], style={'display': 'flex', 'justify-content': 'center'})
-
-
+    ])
 ],style=SIDEBAR_BOTTOM)
 
 sidebar = html.Div([
