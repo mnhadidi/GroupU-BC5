@@ -53,7 +53,6 @@ The line plot represents a trending view of the past year of the particular inde
 
 ## Screenshots
 ### Asset Insights
-![image](https://user-images.githubusercontent.com/90759275/171040216-cb72eaae-8420-4b50-a479-341c4e9851b8.png)
 ![image](https://user-images.githubusercontent.com/90759275/171040019-2d2a36a6-0d05-418a-b63a-86a295bbed2f.png)
 ![image](https://user-images.githubusercontent.com/90759275/171040080-b8f5ff56-4fab-42f9-88d4-b5968f14ec2b.png)
 ![image](https://user-images.githubusercontent.com/90759275/171040113-7fca44bf-9f5c-4f0a-bdec-a80812ae3758.png)
