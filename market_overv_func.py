@@ -220,12 +220,10 @@ def get_top_ten_coins_data(resp):
     for line in resp['Data']:
         coin.append(line['CoinInfo']['Name'])
         coin_name.append(line['CoinInfo']['FullName'])
-        long_form = ticker_df.loc[ticker_df['Symbol'] == line['CoinInfo']['Name'], 'Name'].iloc[0]
-
-        # long_form = ticker_df['yf'][line['CoinInfo']['Name']]
+        long_form = ticker_df.loc[ticker_df['Symbol'] == line['CoinInfo']['Name'], 'text'].iloc[0]
         url_begin = 'https://cryptologos.cc/logos/'
         url_end = '-logo.png?v=022'
-        long_form = long_form.lower().replace("(", "").replace(")", "").replace(" ", "-")
+        long_form = long_form.lower().replace("(", "").replace(")", "").replace("[co] ", "").replace(" ", "-")
         full_url = url_begin + long_form + url_end
 
         r = requests.get(full_url)

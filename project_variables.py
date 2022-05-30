@@ -43,9 +43,9 @@ start_info = {
 # get all tickers
 def cleanup_ticker_info():
     stock_list = pd.read_csv("data/stock-full-list.csv")
-    coin_list = pd.read_csv("data/coin-full-list.csv")
+    coin_list = pd.read_csv("data/crypto-list.csv")
 
-    #add stock to type
+    # add stock to type
     stock_list['type'] = 'stock'
     # add text for dropdown
     stock_list['text'] = stock_list.apply(lambda x: '[ST] ' + x['Name'] + ' (' + x['Symbol'] + ')', axis=1)
@@ -53,14 +53,16 @@ def cleanup_ticker_info():
     # add coin to type
     coin_list['type'] = 'coin'
     # rename column to match stock csv
-    coin_list = coin_list.rename(columns={"Coin": "Symbol"})
+    coin_list = coin_list.rename(columns={"symbol": "Symbol","name": "Name"})
     # add text for dropdown
-    coin_list['text'] = coin_list.apply(lambda x: x['Name'], axis=1)
+    coin_list['text'] = coin_list.apply(lambda x: '[CO] ' + x['Name'] + ' ('  + x['Symbol'] + ')', axis=1)
     coin_list['yf'] = coin_list.apply(lambda x: x['Symbol'] + '-USD', axis=1)
     # join the two tables
     # full_coin_stock_list = stock_list.append(coin_list, ignore_index=True)
     full_coin_stock_list = pd.concat([stock_list, coin_list], axis=0, ignore_index=True)
     full_coin_stock_list = full_coin_stock_list.sort_values(by=['Symbol'], ignore_index=True)
+    # drop duplicates
+    full_coin_stock_list = full_coin_stock_list.drop_duplicates(subset=['Symbol'])
 
     return full_coin_stock_list
 

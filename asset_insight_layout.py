@@ -28,7 +28,7 @@ date = "Data last updated: " + to_datetime(str(coin_df.index.values[-1])).strfti
 ####################
 
 # create currency dropdown
-currency_dropdown = func_currency_dropdown(ticker_df['text'], ticker_df.loc[ticker_df['yf'] == asset, 'Name'].iloc[0])
+currency_dropdown = func_currency_dropdown(ticker_df['text'], ticker_df.loc[ticker_df['yf'] == asset, 'text'].iloc[0])
 
 # create button group for date period
 button_group = func_button_group()

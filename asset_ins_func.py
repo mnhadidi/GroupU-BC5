@@ -232,7 +232,7 @@ def create_kpi_div(timeframe, coin_df):
             dbc.Card(
                 dbc.CardBody(
                     [
-                        html.H4(current_price_str, className="card-title", style={'color': '#ffffff'}),
+                        html.H5(current_price_str, className="card-title", style={'color': '#ffffff'}),
                         html.P(
                             "Current price",
                             className="card-text",
@@ -247,7 +247,7 @@ def create_kpi_div(timeframe, coin_df):
             dbc.Card(
                 dbc.CardBody(
                     [
-                        html.H4(day_change_str, className="card-title", style={'color': color}),
+                        html.H5(day_change_str, className="card-title", style={'color': color}),
                         html.P(
                             "Last day change",
                             className="card-text",
@@ -262,7 +262,7 @@ def create_kpi_div(timeframe, coin_df):
             dbc.Card(
                 dbc.CardBody(
                     [
-                        html.H4(max_price, className="card-title", style={'color': '#ffffff'}),
+                        html.H5(max_price, className="card-title", style={'color': '#ffffff'}),
                         html.P(
                             high_string,
                             className="card-text",
@@ -277,7 +277,7 @@ def create_kpi_div(timeframe, coin_df):
             dbc.Card(
                 dbc.CardBody(
                     [
-                        html.H4(min_price, className="card-title", style={'color': '#ffffff'}),
+                        html.H5(min_price, className="card-title", style={'color': '#ffffff'}),
                         html.P(
                             low_string,
                             className="card-text",
@@ -292,7 +292,7 @@ def create_kpi_div(timeframe, coin_df):
             dbc.Card(
                 dbc.CardBody(
                     [
-                        html.H4(rsi_value, className="card-title", style={'color': '#ffffff'}),
+                        html.H5(rsi_value, className="card-title", style={'color': '#ffffff'}),
                         html.P(
                             'RSI',
                             className="card-text",
